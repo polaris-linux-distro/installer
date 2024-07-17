@@ -1,4 +1,0 @@
-linux-zen
-base
-linux-firmware
-base-devel
