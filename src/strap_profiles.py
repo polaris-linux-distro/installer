@@ -24,7 +24,9 @@ class BaseProfile(Profile):
 	def __init__(self):
 		super().__init__(
 			'Core',
-			ProfileType.Minimal
+			ProfileType.Minimal,
+            support_greeter=True,
+            support_gfx_driver=True
 		)
 
 	@property
@@ -55,51 +57,7 @@ class BaseProfile(Profile):
             'mimalloc',
             'make',
             'nasm',
-            'g++'
-		]
-
-	def post_install(self, install_session: 'Installer'):
-		for profile in self._current_selection:
-			profile.post_install(install_session)
-
-	def install(self, install_session: 'Installer'):
-		# Install common packages for all desktop environments
-		install_session.add_additional_packages(self.packages)
-
-		for profile in self._current_selection:
-			info(f'Installing profile {profile.name}...')
-
-			install_session.add_additional_packages(profile.packages)
-			install_session.enable_service(profile.services)
-
-			profile.install(install_session)
-			
-class ServerProfile(BaseProfile):
-	def __init__(self):
-		super().__init__(
-			'Server',
-			ProfileType.Minimal
-		)
-
-	@property
-	def packages(self) -> List[str]:
-		return [
-			'packagekit',
-            'cockpit',
-            'udisks2'
-		]
-	
-class BaseDesktopProfile(BaseProfile):
-    def __init__(self):
-        super().__init__(
-			'BaseDesktop',
-			ProfileType.Minimal,
-			support_greeter=True
-		)
-
-    @property
-    def packages(self) -> List[str]:
-        return [
+            'g++',
             'xorg-server',
             'xdg-utils',
             'htop',
@@ -125,13 +83,30 @@ class BaseDesktopProfile(BaseProfile):
             'imagemagick',
             'bluez',
             'gparted',
-            'wayland-protocols'
-        ]
+            'wayland-protocols',
+            'icoutils'
+		]
+
+	def post_install(self, install_session: 'Installer'):
+		for profile in self._current_selection:
+			profile.post_install(install_session)
+
+	def install(self, install_session: 'Installer'):
+		# Install common packages for all desktop environments
+		install_session.add_additional_packages(self.packages)
+
+		for profile in self._current_selection:
+			info(f'Installing profile {profile.name}...')
+
+			install_session.add_additional_packages(profile.packages)
+			install_session.enable_service(profile.services)
+
+			profile.install(install_session)
 	
-class BudgieProfile(BaseDesktopProfile):
+class BudgieProfile(BaseProfile):
     def __init__(self):
         super().__init__(
-			'BaseDesktop',
+			'BudgieDesktop',
 			ProfileType.Minimal,
 			support_greeter=True
 		)
@@ -147,10 +122,10 @@ class BudgieProfile(BaseDesktopProfile):
             'mousepad'
         ]
 	
-class GnomeProfile(BaseDesktopProfile):
+class GnomeProfile(BaseProfile):
     def __init__(self):
         super().__init__(
-			'BaseDesktop',
+			'GnomeDesktop',
 			ProfileType.Minimal,
 			support_greeter=True
 		)
@@ -163,10 +138,10 @@ class GnomeProfile(BaseDesktopProfile):
             'gnome-keyring'
         ]
 	
-class GnomeProfile(BaseDesktopProfile):
+class KDEProfile(BaseProfile):
     def __init__(self):
         super().__init__(
-			'BaseDesktop',
+			'KDEDesktop',
 			ProfileType.Minimal,
 			support_greeter=True
 		)
@@ -174,7 +149,31 @@ class GnomeProfile(BaseDesktopProfile):
     @property
     def packages(self) -> List[str]:
         return [
-            'gnome',
-            'gnome-tweaks',
-            'gnome-keyring'
+            'plasma-meta',
+			'kwrite',
+			'dolphin',
+			'ark',
+			'plasma-workspace',
+			'egl-wayland',
+            'dolphin-plugins',
+            'ffmpegthumbs',
+            'kde-inotify-survey',
+            'kdeconnect-kde',
+            'kdegraphics-thumbnailers',
+            'kdenetwork-filesharing',
+            'kimageformats',
+            'kio-admin',
+            'kio-extras',
+            'kio-fuse',
+            'kio-gdrive',
+            'libappindicator-gtk3',
+            'phonon-vlc',
+            'qt-imageformats',
+            'xwaylandvideobridge',
+            'power-profiles-daemon',
+            'maliit-keyboard',
+            'orca',
+            'xsettingsd',
+            'switcheroo-control',
+            'iio-sensor-proxy'
         ]
