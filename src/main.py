@@ -42,14 +42,12 @@ def perform_installation(mountpoint: Path):
 
 			installation.copy_iso_network_config(enable_services=True)
 			installation.add_additional_packages(['nano', 'wget', 'git'])
-
+			
 			profile_config = ProfileConfiguration(MinimalProfile())
 			profile_handler.install_profile_config(installation, profile_config)
-			# fuck off, pylance.
-            users = list()
-            for user in config["users"]:
-                user = User('devel', 'devel', False)
-                users.append(user)
+			users = list()
+            for user in config["user"]:
+                user
             installation.create_users(user)
 
 	# Once this is done, we output some useful information to the user

@@ -1,5 +1,0 @@
-blueberry
-system-config-printer
-metacity
-feh
-materia-gtk-theme

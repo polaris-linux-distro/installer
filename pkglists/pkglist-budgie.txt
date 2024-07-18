@@ -1,5 +1,0 @@
-materia-gtk-theme
-budgie
-nemo
-feh
-network-manager-applet

@@ -8,6 +8,18 @@ if TYPE_CHECKING:
 	from archinstall.lib.installer import Installer
 	_: Any
 
+core_aur_list = [
+    'aic94xx-firmware',
+    'ast-firmware',
+    'wd719x-firmware',
+    'upd72020x-fw'
+]
+
+
+core_desktop_aur_list = [
+    "ptyxis"
+]
+
 class BaseProfile(Profile):
 	def __init__(self):
 		super().__init__(
@@ -62,17 +74,7 @@ class BaseProfile(Profile):
 
 			profile.install(install_session)
 			
-from typing import Any, TYPE_CHECKING, List, Optional, Dict
-
-from archinstall.lib.output import info
-from archinstall.lib.profile.profiles_handler import profile_handler
-from archinstall.default_profiles.profile import Profile, ProfileType, SelectResult, GreeterType
-
-if TYPE_CHECKING:
-	from archinstall.lib.installer import Installer
-	_: Any
-
-class ServerProfile(Profile):
+class ServerProfile(BaseProfile):
 	def __init__(self):
 		super().__init__(
 			'Server',
@@ -86,3 +88,93 @@ class ServerProfile(Profile):
             'cockpit',
             'udisks2'
 		]
+	
+class BaseDesktopProfile(BaseProfile):
+    def __init__(self):
+        super().__init__(
+			'BaseDesktop',
+			ProfileType.Minimal,
+			support_greeter=True
+		)
+
+    @property
+    def packages(self) -> List[str]:
+        return [
+            'xorg-server',
+            'xdg-utils',
+            'htop',
+            'pipewire',
+            'pipewire-alsa',
+            'pipewire-jack',
+            'pipewire-pulse',
+            'gst-plugin-pipewire',
+            'libpulse',
+            'wireplumber',
+            'flatpak',
+            'papirus-icon-theme',
+            'gnu-free-fonts',
+            'noto-fonts',
+            'vlc',
+            'thunderbird',
+            'vala',
+            'noto-color-emoji',
+            'nerd-fonts',
+            'noto-sans',
+            'firefox',
+            'touchegg',
+            'imagemagick',
+            'bluez',
+            'gparted',
+            'wayland-protocols'
+        ]
+	
+class BudgieProfile(BaseDesktopProfile):
+    def __init__(self):
+        super().__init__(
+			'BaseDesktop',
+			ProfileType.Minimal,
+			support_greeter=True
+		)
+
+    @property
+    def packages(self) -> List[str]:
+        return [
+            'materia-gtk-theme',
+            'budgie',
+            'nemo',
+            'feh',
+            'network-manager-applet',
+            'mousepad'
+        ]
+	
+class GnomeProfile(BaseDesktopProfile):
+    def __init__(self):
+        super().__init__(
+			'BaseDesktop',
+			ProfileType.Minimal,
+			support_greeter=True
+		)
+
+    @property
+    def packages(self) -> List[str]:
+        return [
+            'gnome',
+            'gnome-tweaks',
+            'gnome-keyring'
+        ]
+	
+class GnomeProfile(BaseDesktopProfile):
+    def __init__(self):
+        super().__init__(
+			'BaseDesktop',
+			ProfileType.Minimal,
+			support_greeter=True
+		)
+
+    @property
+    def packages(self) -> List[str]:
+        return [
+            'gnome',
+            'gnome-tweaks',
+            'gnome-keyring'
+        ]
