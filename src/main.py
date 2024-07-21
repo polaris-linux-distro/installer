@@ -11,6 +11,9 @@ from archinstall.lib.profile.profiles_handler import ProfileHandler
 
 from archinstall.lib.models import Bootloader, User
 from archinstall.default_profiles.profile import GreeterType
+import os
+
+SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
 packages = [
 	'wget',
@@ -81,7 +84,8 @@ packages = [
 	'mousepad',
 	'sddm',
 	'lzop',
-	'xorg-xinit'
+	'xorg-xinit',
+	'zsh'
 ]
 
 amd_drivers = [
@@ -107,9 +111,9 @@ intel_drivers = [
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
 
-	global_menu.enable('archinstall-language')
-	global_menu.enable('timezone')
-	global_menu.enable('mirror_config')
+	global_menu.enable('archinstall-language', mandatory=True)
+	global_menu.enable('timezone', mandatory=True)
+	global_menu.enable('mirror_config', mandatory=True)
 	global_menu.enable('disk_config', mandatory=True)
 	global_menu.enable('disk_encryption')
 	global_menu.enable('hostname', mandatory=True)
@@ -164,6 +168,8 @@ def perform_installation(mountpoint: Path):
 
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
+		
+		installation.run_command(f"dconf load {SCRIPTDIR}/dconf-budgie.ini")
 
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
