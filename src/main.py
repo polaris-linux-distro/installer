@@ -169,7 +169,8 @@ def perform_installation(mountpoint: Path):
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		
-		installation.run_command(f"dconf load {SCRIPTDIR}/dconf-budgie.ini")
+		installation.run_command(f"echo {open(f"{SCRIPTDIR}/dconf-budgie.ini", "r")} > /etc/budgie-dconf-polaris.ini")
+		installation.run_command(f"dconf load / /etc/budgie-dconf-polaris.ini")
 
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
