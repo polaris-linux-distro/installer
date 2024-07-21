@@ -1,1 +1,0 @@
-cat /etc/dconf-budgie.ini | dconf load /

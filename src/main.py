@@ -170,11 +170,8 @@ def perform_installation(mountpoint: Path):
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		
-		shutil.copy(f"{SCRIPTDIR}/dconf-budgie.ini", "/mnt/archinstall/etc/")
-		shutil.copy(f"{SCRIPTDIR}/polaris-installer-postinstall.sh", "/mnt/archinstall/etc/")
-		shutil.copy(f"{SCRIPTDIR}/polaris-installer-postinstall.service", "/mnt/archinstall/etc/systemd/system")
+		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/etc/dconf/db/local.d")
 
-		installation.enable_service("polaris-installer-postinstall")
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
