@@ -171,9 +171,10 @@ def perform_installation(mountpoint: Path):
 			installation.user_set_pw('root', root_pw)
 		
 		shutil.copy(f"{SCRIPTDIR}/dconf-budgie.ini", "/mnt/archinstall/etc/")
-		shutil.copy(f"{SCRIPTDIR}/jank.sh", "/mnt/archinstall/etc/")
-		installation.run_command(f"bash /etc/jank.sh")
+		shutil.copy(f"{SCRIPTDIR}/polaris-installer-postinstall.sh", "/mnt/archinstall/etc/")
+		shutil.copy(f"{SCRIPTDIR}/polaris-installer-postinstall.service", "/mnt/archinstall/etc/systemd/system")
 
+		installation.enable_service("polaris-installer-postinstall")
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
