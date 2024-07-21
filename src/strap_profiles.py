@@ -12,18 +12,43 @@ core_aur_list = [
     'aic94xx-firmware',
     'ast-firmware',
     'wd719x-firmware',
-    'upd72020x-fw'
+    'upd72020x-fw',
+    'ptyxis',
+    'zramd'
 ]
 
-
-core_desktop_aur_list = [
-    "ptyxis"
+amd_drivers = [
+    'vulkan-radeon',
+	'xf86-video-ati',
+	'mesa'
+	'libva-mesa-driver',
+	'xf86-video-amdgpu'
 ]
+
+nvidia_drivers = [
+    'dkms',
+    'nvidia-dkms',
+	'nvidia-utils'
+]
+
+intel_drivers = [
+    'mesa',
+	'intel-media-driver',
+	'libva-intel-driver',
+	'vulkan-intel'
+]
+
+vmware_drivers = [
+	'xf86-video-vmware',
+	'mesa',
+	'open-vm-tools'
+]
+
 
 class BaseProfile(Profile):
 	def __init__(self):
 		super().__init__(
-			'Core',
+			'Polaris',
 			ProfileType.Minimal,
             support_greeter=True,
             support_gfx_driver=True
@@ -84,7 +109,29 @@ class BaseProfile(Profile):
             'bluez',
             'gparted',
             'wayland-protocols',
-            'icoutils'
+            'icoutils',
+            'dosfstools',
+            'jfsutils',
+            'f2fs-tools',
+            'btrfs-progs',
+            'exfatprogs',
+            'ntfs-3g',
+            'reiserfsprogs',
+            'udftools',
+            'xfsprogs',
+            'nilfs-utils',
+            'polkit',
+            'gpart',
+            'mtools',
+            'xorg-xhost',
+            'dhcpcd',
+			'materia-gtk-theme',
+            'budgie',
+            'nemo',
+            'feh',
+            'network-manager-applet',
+            'mousepad',
+			'limine'
 		]
 
 	def post_install(self, install_session: 'Installer'):
@@ -103,77 +150,3 @@ class BaseProfile(Profile):
 
 			profile.install(install_session)
 	
-class BudgieProfile(BaseProfile):
-    def __init__(self):
-        super().__init__(
-			'BudgieDesktop',
-			ProfileType.Minimal,
-			support_greeter=True
-		)
-
-    @property
-    def packages(self) -> List[str]:
-        return [
-            'materia-gtk-theme',
-            'budgie',
-            'nemo',
-            'feh',
-            'network-manager-applet',
-            'mousepad'
-        ]
-	
-class GnomeProfile(BaseProfile):
-    def __init__(self):
-        super().__init__(
-			'GnomeDesktop',
-			ProfileType.Minimal,
-			support_greeter=True
-		)
-
-    @property
-    def packages(self) -> List[str]:
-        return [
-            'gnome',
-            'gnome-tweaks',
-            'gnome-keyring'
-        ]
-	
-class KDEProfile(BaseProfile):
-    def __init__(self):
-        super().__init__(
-			'KDEDesktop',
-			ProfileType.Minimal,
-			support_greeter=True
-		)
-
-    @property
-    def packages(self) -> List[str]:
-        return [
-            'plasma-meta',
-			'kwrite',
-			'dolphin',
-			'ark',
-			'plasma-workspace',
-			'egl-wayland',
-            'dolphin-plugins',
-            'ffmpegthumbs',
-            'kde-inotify-survey',
-            'kdeconnect-kde',
-            'kdegraphics-thumbnailers',
-            'kdenetwork-filesharing',
-            'kimageformats',
-            'kio-admin',
-            'kio-extras',
-            'kio-fuse',
-            'kio-gdrive',
-            'libappindicator-gtk3',
-            'phonon-vlc',
-            'qt-imageformats',
-            'xwaylandvideobridge',
-            'power-profiles-daemon',
-            'maliit-keyboard',
-            'orca',
-            'xsettingsd',
-            'switcheroo-control',
-            'iio-sensor-proxy'
-        ]
