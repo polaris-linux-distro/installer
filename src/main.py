@@ -12,6 +12,7 @@ from archinstall.lib.profile.profiles_handler import ProfileHandler
 from archinstall.lib.models import Bootloader, User
 from archinstall.default_profiles.profile import GreeterType
 import os
+import shutil
 
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -170,7 +171,8 @@ def perform_installation(mountpoint: Path):
 			installation.user_set_pw('root', root_pw)
 		
 		installation.run_command(f"echo {open(f"{SCRIPTDIR}/dconf-budgie.ini", "r")} > /etc/budgie-dconf-polaris.ini")
-		installation.run_command(f"cat /etc/budgie-dconf-polaris.ini | dconf load /")
+		shutil.copy(f"{SCRIPTDIR}/jank.sh", "/mnt/archinstall/etc/")
+		installation.run_command(f"bash /etc/jank.sh")
 
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")

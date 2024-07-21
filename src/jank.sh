@@ -1,0 +1,1 @@
+cat /etc/budgie-dconf-polaris.ini | dconf load /
