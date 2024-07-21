@@ -170,7 +170,7 @@ def perform_installation(mountpoint: Path):
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		
-		installation.run_command(f"echo {open(f"{SCRIPTDIR}/dconf-budgie.ini", "r")} > /etc/budgie-dconf-polaris.ini")
+		shutil.copy(f"{SCRIPTDIR}/dconf-budgie.ini", "/mnt/archinstall/etc/")
 		shutil.copy(f"{SCRIPTDIR}/jank.sh", "/mnt/archinstall/etc/")
 		installation.run_command(f"bash /etc/jank.sh")
 

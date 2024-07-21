@@ -1,1 +1,1 @@
-cat /etc/budgie-dconf-polaris.ini | dconf load /
+cat /etc/dconf-budgie.ini | dconf load /
