@@ -84,6 +84,26 @@ packages = [
 	'xorg-xinit'
 ]
 
+amd_drivers = [
+    'vulkan-radeon',
+	'xf86-video-ati',
+	'mesa'
+	'libva-mesa-driver',
+	'xf86-video-amdgpu'
+]
+
+nvidia_drivers = [
+    'dkms',
+    'nvidia-dkms',
+	'nvidia-utils'
+]
+
+intel_drivers = [
+    'mesa',
+	'intel-media-driver',
+	'libva-intel-driver',
+	'vulkan-intel'
+]
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
 
