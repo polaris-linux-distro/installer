@@ -170,7 +170,7 @@ def perform_installation(mountpoint: Path):
 			installation.user_set_pw('root', root_pw)
 		
 		installation.run_command(f"echo {open(f"{SCRIPTDIR}/dconf-budgie.ini", "r")} > /etc/budgie-dconf-polaris.ini")
-		installation.run_command(f"dconf load / /etc/budgie-dconf-polaris.ini")
+		installation.run_command(f"cat /etc/budgie-dconf-polaris.ini | dconf load /")
 
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
