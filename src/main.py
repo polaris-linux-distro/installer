@@ -171,7 +171,7 @@ def perform_installation(mountpoint: Path):
 			installation.user_set_pw('root', root_pw)
 		
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
-		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d")
+		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d/00_defaults")
 		with open("/mnt/archinstall/etc/dconf/profile/user", "w+") as f:
 			f.write("""user-db:user
 system-db:local""")
