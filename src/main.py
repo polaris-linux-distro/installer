@@ -170,7 +170,7 @@ def perform_installation(mountpoint: Path):
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		
-		os.remove("/mnt/archinstall/etc/dconf/db/local.d")
+		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
 		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d")
 		with open("/mnt/archinstall/etc/dconf/profile/user", "r") as f:
 			f.write("""user-db:user
