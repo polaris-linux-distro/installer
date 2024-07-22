@@ -4,13 +4,9 @@ import archinstall
 from archinstall import debug
 from archinstall.lib.installer import Installer
 from archinstall.lib.configuration import ConfigurationOutput
-from archinstall.lib import models
 from archinstall.lib import disk
 from archinstall.lib import locale
-from archinstall.lib.profile.profiles_handler import ProfileHandler
-
 from archinstall.lib.models import Bootloader, User
-from archinstall.default_profiles.profile import GreeterType
 import os
 import shutil
 
@@ -175,6 +171,8 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/dconf/profile/user", "w+") as f:
 			f.write("""user-db:user
 system-db:local""")
+			installation.run_command("chown -R root:root /etc/dconf/db")
+			installation.run_command("chmod -R 755 /etc/dconf/db")
 
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
