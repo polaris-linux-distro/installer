@@ -166,6 +166,7 @@ def perform_installation(mountpoint: Path):
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		
+		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
 		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d/00_defaults")
 		with open("/mnt/archinstall/etc/dconf/profile/user", "w+") as f:
@@ -173,6 +174,7 @@ def perform_installation(mountpoint: Path):
 system-db:local""")
 			installation.run_command("chown -R root:root /etc/dconf/db")
 			installation.run_command("chmod -R 755 /etc/dconf/db")
+			installation.run_command("dconf update")
 
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
