@@ -104,6 +104,8 @@ packages = [
 	'lha',
 	'tpm2-tools',
 	'plymouth',
+	'libnm',
+	'fastfetch'
 ]
 
 amd_drivers = [
@@ -207,7 +209,7 @@ def perform_installation(mountpoint: Path):
 			lines = file.readlines()
     
     	# Prepare the repository entry
-		repo_entry = "\n[polaris]\nServer = https://polaris-linux-distro.github.io/pacman-repo/repo\n"
+		repo_entry = "\n[polaris]\nServer = https://polaris-linux-distro.github.io/pacman-repo/repo\nSigLevel = Optional TrustAll\n"
 
 		# Append the repository entry to the lines
 		lines.append(repo_entry)
@@ -216,7 +218,7 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
 
-		installation.run_command("pacman -Sy")
+		installation.run_command("pacman -Sy polo")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
