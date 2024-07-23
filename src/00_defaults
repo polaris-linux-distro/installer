@@ -68,7 +68,7 @@ enable-shadow=true
 location='bottom'
 size=39
 spacing=2
-transparency='none'
+transparency='always'
 
 [com/solus-project/budgie-panel/panels/{3c68b03c-46cd-11ef-b2b4-002324ab9d02}]
 applets=['9a9988f2-46cd-11ef-b2b4-002324ab9d02', 'a6393f5e-46cd-11ef-b2b4-002324ab9d02', '8ee5fea0-46cd-11ef-b2b4-002324ab9d02', '926a6e94-46cd-11ef-b2b4-002324ab9d02', 'a9fe19de-46cd-11ef-b2b4-002324ab9d02', 'be6d7f54-46cd-11ef-b2b4-002324ab9d02', 'b6add96c-46cd-11ef-b2b4-002324ab9d02', 'b026ac4a-46cd-11ef-b2b4-002324ab9d02']
@@ -76,7 +76,7 @@ enable-shadow=true
 location='top'
 size=36
 spacing=2
-transparency='none'
+transparency='always'
 
 [com/solus-project/budgie-wm]
 button-layout='appmenu:minimize,maximize,close'
