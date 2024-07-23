@@ -99,13 +99,11 @@ packages = [
 	'libportal',
 	'libportal-gtk4',
 	'pango',
-	'pcre4',
 	'vte-common',
 	'meson',
 	'lha',
 	'tpm2-tools',
 	'plymouth',
-	'xvkbd'
 ]
 
 amd_drivers = [
@@ -143,13 +141,15 @@ vmware_drivers = [
 ]
 
 aur_list = [
+	'pcre4',
     'aic94xx-firmware',
     'ast-firmware',
     'wd719x-firmware',
     'upd72020x-fw',
     'ptyxis',
     'zramd',
-	'qlipper'
+	'qlipper',
+	'xvkbd'
 ]
 
 
@@ -202,7 +202,13 @@ def perform_installation(mountpoint: Path):
 		if mirror_config := archinstall.arguments.get('mirror_config', None):
 			installation.set_mirrors(mirror_config)
 		installation.activate_time_synchronization()
-
+		
+		installation.run_command("""echo 
+						[polaris]
+						SigLevel = Optional TrustAll
+						Server = https://polaris-linux-distro.github.io/pacman-repo/repo   
+						   > /etc/pacman.conf""")
+		installation.run_command("pacman -Sy polo")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
@@ -221,10 +227,13 @@ def perform_installation(mountpoint: Path):
 			installation.set_timezone(timezone)
 		if archinstall.accessibility_tools_in_use():
 			installation.enable_espeakup()
+		installation.activate_time_synchronization()
 
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
-			
+		if users := archinstall.arguments.get('!users', None):
+				installation.create_users(users)
+
 		os.mkdir("/mnt/archinstall/etc/polaris_installer")
 		os.mkdir("/mnt/archinstall/etc/polaris_installer/pkg")
 		for pkg in aur_list:
