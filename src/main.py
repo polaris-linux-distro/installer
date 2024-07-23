@@ -246,7 +246,7 @@ def perform_installation(mountpoint: Path):
 		os.mkdir("/mnt/archinstall/etc/polaris_installer/pkg")
 		for pkg in aur_list:
 			Repo.clone_from(f"https://aur.archlinux.org/{pkg}.git", f"/mnt/archinstall/etc/polaris_installer/pkg/{pkg}")
-			installation.run_command(f"cd /etc/polaris_installer/pkg/{pkg}/makepkg -si --noconfirm")
+			installation.run_command(f"cd /etc/polaris_installer/pkg/{pkg}/ && makepkg -si --noconfirm")
 		
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
