@@ -246,9 +246,13 @@ def perform_installation(mountpoint: Path):
 
 		os.mkdir("/mnt/archinstall/etc/polaris_installer")
 		os.mkdir("/mnt/archinstall/etc/polaris_installer/pkg")
-		# for pkg in aur_list:
-		# 	Repo.clone_from(f"https://aur.archlinux.org/{pkg}.git", f"/mnt/archinstall/etc/polaris_installer/pkg/{pkg}")
-		# 	installation.run_command(f"cd /etc/polaris_installer/pkg/{pkg}/ && makepkg -si --noconfirm")
+		for pkg in aur_list:
+			repo_path = f"/mnt/archinstall/etc/polaris_installer/pkg/{pkg}"
+			Repo.clone_from(f"https://aur.archlinux.org/{pkg}.git", repo_path)
+			os.chdir(repo_path)
+			installation.run_command("makepkg -si --noconfirm")
+			os.chdir("-")  # Return to the previous directory
+
 		
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
