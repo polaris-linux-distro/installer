@@ -9,6 +9,9 @@ from archinstall.lib import locale
 from archinstall.lib.models import Bootloader, User
 import os
 import shutil
+import gpuvendorutil
+from git import Repo
+import subprocess
 
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -82,7 +85,27 @@ packages = [
 	'sddm',
 	'lzop',
 	'xorg-xinit',
-	'zsh'
+	'zsh',
+	'earlyoom',
+	'go',
+	'util-linux',
+	'cairo',
+	'fribidi',
+	'gtk4',
+	'hicolor-icon-theme',
+	'icu',
+	'json-glib',
+	'libadwaita',
+	'libportal',
+	'libportal-gtk4',
+	'pango',
+	'pcre4',
+	'vte-common',
+	'meson',
+	'lha',
+	'tpm2-tools',
+	'plymouth',
+	'xvkbd'
 ]
 
 amd_drivers = [
@@ -99,12 +122,37 @@ nvidia_drivers = [
 	'nvidia-utils'
 ]
 
+nvidia_newer_drivers = [
+	'nvidia-open-dkms',
+	'nvidia-open',
+	'dkms',
+	'nvidia-utils'
+]
+
 intel_drivers = [
     'mesa',
 	'intel-media-driver',
 	'libva-intel-driver',
 	'vulkan-intel'
 ]
+
+vmware_drivers = [
+	'xf86-video-vmware',
+	'mesa',
+	'open-vm-tools'
+]
+
+aur_list = [
+    'aic94xx-firmware',
+    'ast-firmware',
+    'wd719x-firmware',
+    'upd72020x-fw',
+    'ptyxis',
+    'zramd',
+	'qlipper'
+]
+
+
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
 
@@ -153,10 +201,21 @@ def perform_installation(mountpoint: Path):
 			target.parent.mkdir(parents=True)
 		if mirror_config := archinstall.arguments.get('mirror_config', None):
 			installation.set_mirrors(mirror_config)
-		installation.setup_swap('zram')
 		installation.activate_time_synchronization()
+
+		gpu_vendor = gpuvendorutil.get_gpu_vendor()
+		if gpu_vendor == "amd":
+			installation.add_additional_packages(amd_drivers)
+		if gpu_vendor == "intel":
+			installation.add_additional_packages(intel_drivers)
+		if gpu_vendor == "nvidia_beforeturing":
+			installation.add_additional_packages(nvidia_drivers)
+		if gpu_vendor == "nvidia_turingplus":
+			installation.add_additional_packages(nvidia_newer_drivers)
+		if gpu_vendor == "vmware":
+			installation.add_additional_packages(vmware_drivers)
 				
-		installation.add_additional_packages(packages=packages)
+		installation.add_additional_packages(packages)
 
 		if timezone := archinstall.arguments.get('timezone', None):
 			installation.set_timezone(timezone)
@@ -165,6 +224,12 @@ def perform_installation(mountpoint: Path):
 
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
+			
+		os.mkdir("/mnt/archinstall/etc/polaris_installer")
+		os.mkdir("/mnt/archinstall/etc/polaris_installer/pkg")
+		for pkg in aur_list:
+			Repo.clone_from(f"https://aur.archlinux.org/{pkg}.git", f"/mnt/archinstall/etc/polaris_installer/pkg/{pkg}")
+			installation.run_command(f"cd /etc/polaris_installer/pkg/{pkg}/makepkg -si --noconfirm")
 		
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
