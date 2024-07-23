@@ -203,11 +203,19 @@ def perform_installation(mountpoint: Path):
 			installation.set_mirrors(mirror_config)
 		installation.activate_time_synchronization()
 		
-		installation.run_command("""echo 
-						[polaris]
-						SigLevel = Optional TrustAll
-						Server = https://polaris-linux-distro.github.io/pacman-repo/repo   
-						   > /etc/pacman.conf""")
+		with open("/mnt/archinstall/etc/pacman.conf", 'r') as file:
+			lines = file.readlines()
+    
+    	# Prepare the repository entry
+		repo_entry = "\n[polaris]\nServer = https://polaris-linux-distro.github.io/pacman-repo/repo\n"
+
+		# Append the repository entry to the lines
+		lines.append(repo_entry)
+		
+		# Write the new content back to pacman.conf
+		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
+			file.writelines(lines)
+
 		installation.run_command("pacman -Sy polo")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
