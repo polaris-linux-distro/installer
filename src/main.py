@@ -10,8 +10,6 @@ from archinstall.lib.models import Bootloader, User
 import os
 import shutil
 import gpuvendorutil
-from git import Repo
-import subprocess
 
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
