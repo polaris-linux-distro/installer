@@ -244,14 +244,8 @@ def perform_installation(mountpoint: Path):
 		if users := archinstall.arguments.get('!users', None):
 				installation.create_users(users)
 
-		os.mkdir("/mnt/archinstall/etc/polaris_installer")
-		os.mkdir("/mnt/archinstall/etc/polaris_installer/pkg")
 		for pkg in aur_list:
-			repo_path = f"/mnt/archinstall/etc/polaris_installer/pkg/{pkg}"
-			Repo.clone_from(f"https://aur.archlinux.org/{pkg}.git", repo_path)
-			os.chdir(repo_path)
-			installation.run_command("makepkg -si --noconfirm")
-			os.chdir("-")  # Return to the previous directory
+			installation.run_command(f"/usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
 
 		
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
