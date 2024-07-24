@@ -104,7 +104,7 @@ packages = [
 	'fastfetch',
 	'wireless-regdb',
 	'galculator',
-	'gnome-terminal'
+	'gnome-console'
 ]
 
 amd_drivers = [
