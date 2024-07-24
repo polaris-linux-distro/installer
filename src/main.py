@@ -242,7 +242,7 @@ def perform_installation(mountpoint: Path):
 		if users := archinstall.arguments.get('!users', None):
 				installation.create_users(users)
 		with open("/mnt/archinstall/etc/skel/usr.conf", "r") as f:
-			installation.run_command(f"echo {f.read()} | sudo tee /root/usr.conf")
+			installation.run_command(f"echo {f.read()} > /root/usr.conf")
 		for pkg in aur_list:
 			installation.run_command(f"/usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
 
