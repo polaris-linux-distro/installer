@@ -245,8 +245,7 @@ def perform_installation(mountpoint: Path):
 
 		print("installing aur packages")
 		installation.run_command("useradd -m -s /bin/zsh builder")
-		installation.run_command("touch /etc/sudoers.d/builder")
-		installation.run_command("echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder")
+		installation.run_command("sed -i '/builder ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers")
 		for pkg in aur_list:
 			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
 			print("package installed successfully")
