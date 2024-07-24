@@ -104,8 +104,7 @@ packages = [
 	'plymouth',
 	'libnm',
 	'fastfetch',
-	'wireless-regdb',
-	'polo'
+	'wireless-regdb'
 ]
 
 amd_drivers = [
@@ -218,7 +217,7 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
 
-		installation.run_command("pacman -Sy --noconfirm")
+		installation.run_command("pacman -Sy polo --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
