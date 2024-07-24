@@ -245,12 +245,12 @@ def perform_installation(mountpoint: Path):
 
 		print("installing aur packages")
 		installation.run_command("useradd -m -s /bin/zsh builder")
-		installation.run_command("usermod -aG wheel builder")
-		installation.run_command("echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers")
+		installation.run_command("echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder")
 		for pkg in aur_list:
 			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
 			print("package installed successfully")
 		installation.run_command("userdel -f builder")
+		installation.run_command("rm /etc/sudoers.d/builder")
 
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
