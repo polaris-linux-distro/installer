@@ -243,8 +243,10 @@ def perform_installation(mountpoint: Path):
 				installation.create_users(users)
 		with open("/mnt/archinstall/etc/skel/usr.conf", "r") as f:
 			installation.run_command(f"echo {f.read()} > /root/usr.conf")
+		installation.run_command("useradd -m -s /bin/zsh builder")
 		for pkg in aur_list:
-			installation.run_command(f"/usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
+			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
+		installation.run_command("userdel -f builder")
 
 		
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
@@ -253,9 +255,9 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/dconf/profile/user", "w+") as f:
 			f.write("""user-db:user
 system-db:local""")
-			installation.run_command("chown -R root:root /etc/dconf/db")
-			installation.run_command("chmod -R 755 /etc/dconf/db")
-			installation.run_command("dconf update")
+		installation.run_command("chown -R root:root /etc/dconf/db")
+		installation.run_command("chmod -R 755 /etc/dconf/db")
+		installation.run_command("dconf update")
 
 		installation.enable_service("sddm")
 		installation.enable_service("NetworkManager")
