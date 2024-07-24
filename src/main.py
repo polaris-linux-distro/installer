@@ -241,14 +241,14 @@ def perform_installation(mountpoint: Path):
 			installation.user_set_pw('root', root_pw)
 		if users := archinstall.arguments.get('!users', None):
 				installation.create_users(users)
-		with open("/mnt/archinstall/etc/skel/usr.conf", "r") as f:
-			installation.run_command(f"echo {f.read()} > /root/usr.conf")
+
+		print("installing aur packages")
 		installation.run_command("useradd -m -s /bin/zsh builder")
 		for pkg in aur_list:
 			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
+			print("package installed successfully")
 		installation.run_command("userdel -f builder")
 
-		
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
 		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d/00_defaults")
