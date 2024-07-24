@@ -235,19 +235,19 @@ def perform_installation(mountpoint: Path):
 			installation.enable_espeakup()
 		installation.activate_time_synchronization()
 
+		print("installing aur packages")
+		installation.run_command("useradd -m -s /bin/zsh builder")
+		installation.run_command("echo 'y' | passwd builder -s")
+		for pkg in aur_list:
+			# bad method should replace
+			installation.run_command(f"echo y | sudo -u builder polo-pkg install {pkg}")
+		installation.run_command("userdel -f builder")
+
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		if users := archinstall.arguments.get('!users', None):
 				installation.create_users(users)
-
-		print("installing aur packages")
-		installation.run_command("useradd -m -s /bin/zsh builder")
-		for pkg in aur_list:
-			installation.run_command(f"sudo -u builder git clone https://aur.archlinux.org/{pkg}.git")
-			installation.run_command(f"sudo -u builder makepkg -sc --noconfirm -p ~/{pkg}/PKGBUILD")
-			installation.run_command(f"pacman -U /home/builder/{pkg}/*.pkg.tar.zst")
-		installation.run_command("userdel -f builder")
-
+				
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
 		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d/00_defaults")
