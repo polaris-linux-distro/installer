@@ -242,10 +242,10 @@ def perform_installation(mountpoint: Path):
 
 		print("installing aur packages")
 		installation.run_command("useradd -m -s /bin/zsh builder")
-		installation.run_command("sed -i '/builder ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers")
-		threads = []
 		for pkg in aur_list:
-			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
+			installation.run_command(f"sudo -u builder git clone https://aur.archlinux.org/{pkg}.git")
+			installation.run_command(f"sudo -u builder makepkg -sc --noconfirm -p ~/{pkg}/PKGBUILD")
+			installation.run_command(f"pacman -U /home/builder/{pkg}/*.pkg.tar.zst")
 		installation.run_command("userdel -f builder")
 
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
