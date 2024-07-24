@@ -104,7 +104,8 @@ packages = [
 	'plymouth',
 	'libnm',
 	'fastfetch',
-	'wireless-regdb'
+	'wireless-regdb',
+	'polo'
 ]
 
 amd_drivers = [
@@ -217,7 +218,7 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
 
-		installation.run_command("pacman -Sy polo --noconfirm")
+		installation.run_command("pacman -Sy --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
@@ -246,7 +247,7 @@ def perform_installation(mountpoint: Path):
 		print("installing aur packages")
 		installation.run_command("useradd -m -s /bin/zsh builder")
 		installation.run_command("usermod -aG wheel builder")
-		installation.run_command("echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers")
+		installation.run_command("echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers")
 		for pkg in aur_list:
 			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
 			print("package installed successfully")
