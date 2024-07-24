@@ -1,15 +1,13 @@
 from pathlib import Path
 
 import archinstall
-from archinstall import debug
 from archinstall.lib.installer import Installer
-from archinstall.lib.configuration import ConfigurationOutput
 from archinstall.lib import disk
 from archinstall.lib import locale
-from archinstall.lib.models import Bootloader, User
+from archinstall.lib.models import Bootloader
 import os
 import shutil
-import gpuvendorutil
+import gpuvendorutil, threading
 
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -246,9 +244,14 @@ def perform_installation(mountpoint: Path):
 		print("installing aur packages")
 		installation.run_command("useradd -m -s /bin/zsh builder")
 		installation.run_command("sed -i '/builder ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers")
+		threads = []
 		for pkg in aur_list:
-			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
-			print("package installed successfully")
+			thread = threading.Thread(target=installation.run_command, args=(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}",))
+			threads.append(thread)
+			thread.start()
+			print("Worker thread started successfully")
+		for thread in threads:
+			thread.join()
 		installation.run_command("userdel -f builder")
 		installation.run_command("rm /etc/sudoers.d/builder")
 
