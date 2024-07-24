@@ -102,7 +102,9 @@ packages = [
 	'plymouth',
 	'libnm',
 	'fastfetch',
-	'wireless-regdb'
+	'wireless-regdb',
+	'galculator',
+	'gnome-terminal'
 ]
 
 amd_drivers = [
@@ -140,14 +142,11 @@ vmware_drivers = [
 ]
 
 aur_list = [
-	'pcre4',
     'aic94xx-firmware',
     'ast-firmware',
     'wd719x-firmware',
     'upd72020x-fw',
-    'ptyxis',
     'zramd',
-	'qlipper',
 	'xvkbd'
 ]
 
@@ -246,12 +245,7 @@ def perform_installation(mountpoint: Path):
 		installation.run_command("sed -i '/builder ALL=(ALL) NOPASSWD: ALL/d' /etc/sudoers")
 		threads = []
 		for pkg in aur_list:
-			thread = threading.Thread(target=installation.run_command, args=(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}",))
-			threads.append(thread)
-			thread.start()
-			print("Worker thread started successfully")
-		for thread in threads:
-			thread.join()
+			installation.run_command(f"sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
 		installation.run_command("userdel -f builder")
 
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
