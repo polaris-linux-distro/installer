@@ -78,7 +78,8 @@ packages = [
 	'feh',
 	'network-manager-applet',
 	'mousepad',
-	'sddm',
+	'lightdm',
+	'lightdm-slick-greeter',
 	'lzop',
 	'xorg-xinit',
 	'zsh',
@@ -258,7 +259,7 @@ system-db:local""")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
 		installation.run_command("dconf update")
 
-		installation.enable_service("sddm")
+		installation.enable_service("lightdm")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
 		installation.genfstab()
