@@ -253,7 +253,6 @@ def perform_installation(mountpoint: Path):
 		for thread in threads:
 			thread.join()
 		installation.run_command("userdel -f builder")
-		installation.run_command("rm /etc/sudoers.d/builder")
 
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
