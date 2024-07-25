@@ -140,18 +140,6 @@ vmware_drivers = [
 	'open-vm-tools'
 ]
 
-aur_list = [
-	'pcre4',
-    'aic94xx-firmware',
-    'ast-firmware',
-    'wd719x-firmware',
-    'upd72020x-fw',
-    'zramd',
-	'xvkbd',
-	'ptyxis',
-	'qlipper'
-]
-
 
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
@@ -237,14 +225,6 @@ def perform_installation(mountpoint: Path):
 			installation.enable_espeakup()
 		installation.activate_time_synchronization()
 
-		print("installing aur packages")
-		installation.run_command("useradd -m -s /bin/zsh builder")
-		installation.run_command("echo 'y' | passwd builder -s")
-		for pkg in aur_list:
-			# bad method should replace
-			installation.run_command(f"echo y | sudo -u builder /usr/bin/python /usr/share/polaris/polo-pkg.py install {pkg}")
-		installation.run_command("userdel -f builder")
-
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		if users := archinstall.arguments.get('!users', None):
@@ -260,6 +240,7 @@ system-db:local""")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
 		installation.run_command("dconf update")
 
+		installation.enable_service("polaris-postinst")
 		installation.enable_service("lightdm")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
