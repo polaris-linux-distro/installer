@@ -204,6 +204,8 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
 
+		# i love having hacky fixes for my own code.. . .. .... .
+		installation.run_command("pacman -Syyu zsh --noconfirm")
 		installation.run_command("pacman -Sy polo --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
