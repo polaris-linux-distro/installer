@@ -78,7 +78,6 @@ packages = [
 	'feh',
 	'network-manager-applet',
 	'mousepad',
-	'lightdm',
 	'lightdm-slick-greeter',
 	'lzop',
 	'xorg-xinit',
@@ -104,8 +103,7 @@ packages = [
 	'libnm',
 	'fastfetch',
 	'wireless-regdb',
-	'galculator',
-	'gnome-console'
+	'galculator'
 ]
 
 amd_drivers = [
@@ -143,12 +141,15 @@ vmware_drivers = [
 ]
 
 aur_list = [
+	'pcre4',
     'aic94xx-firmware',
     'ast-firmware',
     'wd719x-firmware',
     'upd72020x-fw',
     'zramd',
-	'xvkbd'
+	'xvkbd',
+	'ptyxis',
+	'qlipper'
 ]
 
 
