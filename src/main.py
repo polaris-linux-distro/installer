@@ -102,7 +102,10 @@ packages = [
 	'libnm',
 	'fastfetch',
 	'wireless-regdb',
-	'galculator'
+	'galculator',
+	'xaw3d',
+	'libxp',
+	'gnome-console'
 ]
 
 amd_drivers = [
@@ -138,7 +141,6 @@ vmware_drivers = [
 	'mesa',
 	'open-vm-tools'
 ]
-
 
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
@@ -205,7 +207,7 @@ def perform_installation(mountpoint: Path):
 
 		# i love having hacky fixes for my own code.. . .. .... .
 		installation.run_command("pacman -Syyu zsh --noconfirm")
-		installation.run_command("pacman -Sy polo --noconfirm")
+		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
@@ -244,6 +246,11 @@ system-db:local""")
 		lines.append(entry)
 		with open("/mnt/archinstall/etc/sudoers", 'w') as file:
 			file.writelines(lines)
+		
+		with open("/mnt/archinstall/etc/lightdm/lightdm.conf", 'w') as file:
+			file.writelines("""[Seat:*]
+greeter-session=lightdm-slick-greeter""")
+
 
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
 		
@@ -252,7 +259,8 @@ system-db:local""")
 		installation.run_command("dconf update")
 		installation.run_command("plymouth-set-default-theme -R polaris")
 
-		installation.enable_service("polaris-postinst")
+		installation.enable_service("lightdm")
+		installation.enable_service("touchegg")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
 		installation.genfstab()

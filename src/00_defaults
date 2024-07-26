@@ -54,7 +54,7 @@ name='Show Desktop Button'
 position=6
 
 [com/solus-project/budgie-panel/instance/icon-tasklist/{29385d06-46cc-11ef-b2b4-002324ab9d02}]
-pinned-launchers=['firefox.desktop', 'org.mozilla.Thunderbird.desktop', 'org.gnome.Ptyxis.desktop', 'vlc.desktop', 'org.buddiesofbudgie.BudgieScreenshot.desktop']
+pinned-launchers=['firefox.desktop', 'nemo.desktop', 'org.mozilla.Thunderbird.desktop', 'org.gnome.Console.desktop', 'vlc.desktop']
 
 [com/solus-project/budgie-panel/instance/workspaces/{a9fe19de-46cd-11ef-b2b4-002324ab9d02}]
 addbutton-visibility='never'
