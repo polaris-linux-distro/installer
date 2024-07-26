@@ -237,18 +237,16 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/dconf/profile/user", "w+") as f:
 			f.write("""user-db:user
 system-db:local""")
+			
 		with open("/mnt/archinstall/etc/sudoers", 'r') as file:
 			lines = file.readlines()
-    
-    	# Prepare the repository entry
-		repo_entry = "\n%wheel ALL=(ALL:ALL) ALL"
-
-		# Append the repository entry to the lines
-		lines.append(repo_entry)
-		
-		# Write the new content back to pacman.conf
+		entry = "\n%wheel ALL=(ALL:ALL) ALL"
+		lines.append(entry)
 		with open("/mnt/archinstall/etc/sudoers", 'w') as file:
 			file.writelines(lines)
+
+		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
+		
 		installation.run_command("chown -R root:root /etc/dconf/db")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
 		installation.run_command("dconf update")
