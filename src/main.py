@@ -182,7 +182,8 @@ def perform_installation(mountpoint: Path):
 		installation.minimal_installation(
 				multilib=True,
 				hostname=archinstall.arguments.get('hostname', 'archlinux'),
-				locale_config=locale_config
+				locale_config=locale_config,
+				mkinitcpio=False
 		)
 		# to generate a fstab directory holder. Avoids an error on exit and at the same time checks the procedure
 		target = Path(f"{mountpoint}/etc/fstab")
@@ -247,23 +248,21 @@ system-db:local""")
 		with open("/mnt/archinstall/etc/sudoers", 'w') as file:
 			file.writelines(lines)
 		
-		with open("/mnt/archinstall/etc/lightdm/lightdm.conf", 'w') as file:
-			file.writelines("""[Seat:*]
-greeter-session=lightdm-slick-greeter""")
-
-
+		shutil.copy(f"{SCRIPTDIR}/lightdm.conf", "/mnt/archinstall/etc/lightdm/lightdm.conf")
+		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
 		
 		installation.run_command("chown -R root:root /etc/dconf/db")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
 		installation.run_command("dconf update")
-		installation.run_command("plymouth-set-default-theme -R polaris")
+		installation.run_command("plymouth-set-default-theme polaris")
 
 		installation.enable_service("lightdm")
 		installation.enable_service("touchegg")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
 		installation.genfstab()
+		installation.run_command("mkinitcpio -P")
 
 ask_user_questions()
 
