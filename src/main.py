@@ -263,7 +263,7 @@ system-db:local""")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
 		installation.genfstab()
-		installation.run_command("mkinitcpio -P")
+		installation.run_command("mkinitcpio -P --osrelease")
 
 ask_user_questions()
 
