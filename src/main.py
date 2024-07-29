@@ -231,7 +231,7 @@ def perform_installation(mountpoint: Path):
 		if (root_pw := archinstall.arguments.get('!root-password', None)) and len(root_pw):
 			installation.user_set_pw('root', root_pw)
 		if users := archinstall.arguments.get('!users', None):
-				installation.create_users(users)
+			installation.create_users(users)
 
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
@@ -250,7 +250,7 @@ system-db:local""")
 		shutil.copy(f"{SCRIPTDIR}/sddm.conf", "/mnt/archinstall/etc/sddm.conf")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
-		shutil.copy(f"{SCRIPTDIR}/useradd", "/mnt/archinstall/etc/defaults/useradd")
+		shutil.copy(f"{SCRIPTDIR}/useradd", "/mnt/archinstall/etc/default/useradd")
 		
 		installation.run_command("chown -R root:root /etc/dconf/db")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
