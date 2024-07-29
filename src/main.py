@@ -103,7 +103,8 @@ packages = [
 	'galculator',
 	'xaw3d',
 	'libxp',
-	'gnome-console'
+	'gnome-console',
+	'file-roller'
 ]
 
 amd_drivers = [
@@ -262,7 +263,7 @@ system-db:local""")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
 		installation.genfstab()
-		installation.mkinitcpio()
+		installation.run_command("mkinitcpio -P")
 
 ask_user_questions()
 
