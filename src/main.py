@@ -7,7 +7,7 @@ from archinstall.lib import locale
 from archinstall.lib.models import Bootloader
 import os
 import shutil
-import gpuvendorutil, threading
+import gpuvendorutil
 
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -33,7 +33,6 @@ packages = [
 	'linux-firmware-nfp',
 	'mimalloc',
 	'nasm',
-	'xorg-server',
 	'xdg-utils',
 	'htop',
 	'pipewire',
@@ -70,7 +69,6 @@ packages = [
 	'polkit',
 	'gpart',
 	'mtools',
-	'xorg-xhost',
 	'dhcpcd',
 	'materia-gtk-theme',
 	'budgie',
@@ -78,9 +76,9 @@ packages = [
 	'feh',
 	'network-manager-applet',
 	'mousepad',
-	'lightdm-slick-greeter',
+	'sddm',
 	'lzop',
-	'xorg-xinit',
+	'xorg',
 	'earlyoom',
 	'go',
 	'util-linux',
@@ -192,6 +190,7 @@ def perform_installation(mountpoint: Path):
 		if mirror_config := archinstall.arguments.get('mirror_config', None):
 			installation.set_mirrors(mirror_config)
 		installation.activate_time_synchronization()
+		installation.setup_swap("zram")
 		
 		with open("/mnt/archinstall/etc/pacman.conf", 'r') as file:
 			lines = file.readlines()
@@ -248,7 +247,7 @@ system-db:local""")
 		with open("/mnt/archinstall/etc/sudoers", 'w') as file:
 			file.writelines(lines)
 		
-		shutil.copy(f"{SCRIPTDIR}/lightdm.conf", "/mnt/archinstall/etc/lightdm/lightdm.conf")
+		shutil.copy(f"{SCRIPTDIR}/sddm.conf", "/mnt/archinstall/etc/sddm.conf")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
 		
@@ -257,7 +256,7 @@ system-db:local""")
 		installation.run_command("dconf update")
 		installation.run_command("plymouth-set-default-theme polaris")
 
-		installation.enable_service("lightdm")
+		installation.enable_service("sddm")
 		installation.enable_service("touchegg")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
