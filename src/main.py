@@ -108,7 +108,8 @@ packages = [
 	'file-roller',
 	'ed',
 	'qt6-5compat',
-	'qt5-declarative'
+	'qt5-declarative',
+	'sddm'
 ]
 
 amd_drivers = [
@@ -216,8 +217,7 @@ def perform_installation(mountpoint: Path, type):
 		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
 		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
 		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
-		# i love having hacky fixes for my own code.. . .. .... .
-		installation.run_command("pacman -Syyu zsh sddm --noconfirm")
+		installation.run_command("pacman -Syyu zsh --noconfirm")
 		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
