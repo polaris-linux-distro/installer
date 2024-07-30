@@ -8,9 +8,9 @@ and then run:
 
 enter the dir:
 
-cd installer/src
+# cd installer/src
 
 and finally run it:
 
-python main.py
+# python main.py
 

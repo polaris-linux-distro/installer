@@ -106,7 +106,9 @@ packages = [
 	'libxp',
 	'gnome-console',
 	'file-roller',
-	'ed'
+	'ed',
+	'qt6-5compat',
+	'qt5-declarative'
 ]
 
 amd_drivers = [
@@ -161,7 +163,7 @@ def ask_user_questions():
 
 	global_menu.run()
 
-def perform_installation(mountpoint: Path):
+def perform_installation(mountpoint: Path, type):
 	"""
 	Performs the installation steps on a block device.
 	Only requirement is that the block devices are
@@ -208,22 +210,32 @@ def perform_installation(mountpoint: Path):
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
 
+		# this aur is so chaotic omg
+		print("Installing Chaotic AUR")
+		installation.run_command("pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com")
+		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
+		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
+		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
 		# i love having hacky fixes for my own code.. . .. .... .
 		installation.run_command("pacman -Syyu zsh sddm --noconfirm")
 		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
-		if gpu_vendor == "intel":
+		elif gpu_vendor == "intel":
 			installation.add_additional_packages(intel_drivers)
-		if gpu_vendor == "nvidia_beforeturing":
+		elif gpu_vendor == "nvidia_beforeturing":
 			installation.add_additional_packages(nvidia_drivers)
-		if gpu_vendor == "nvidia_turingplus":
+		elif gpu_vendor == "nvidia_turingplus":
 			installation.add_additional_packages(nvidia_newer_drivers)
-		if gpu_vendor == "vmware":
+		elif gpu_vendor == "vmware":
 			installation.add_additional_packages(vmware_drivers)
-				
+		
 		installation.add_additional_packages(packages)
+		if type == "budgie":
+			installation.add_additional_packages(budgie_list)
+		elif type == "mate":
+			installation.add_additional_packages(mate_list)
 		shutil.copy(f"{SCRIPTDIR}/useradd", "/mnt/archinstall/etc/default/useradd")
 
 		if timezone := archinstall.arguments.get('timezone', None):
