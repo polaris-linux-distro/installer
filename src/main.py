@@ -113,7 +113,8 @@ packages = [
 	'ed',
 	'qt6-5compat',
 	'qt5-declarative',
-	'sddm'
+	'sddm',
+	'gspell'
 ]
 
 amd_drivers = [
@@ -222,7 +223,7 @@ def perform_installation(mountpoint: Path):
 			file.writelines(lines)
 
 		installation.run_command("pacman -Syyu zsh --noconfirm")
-		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd powerpill --noconfirm")
+		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
