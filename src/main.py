@@ -209,8 +209,8 @@ def perform_installation(mountpoint: Path):
 		installation.run_command("pacman-key --init")
 		installation.run_command("pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com")
 		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
-		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
-		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
+		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm")
+		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm")
 		
 		with open("/mnt/archinstall/etc/pacman.conf", 'r') as file:
 			lines = file.readlines()

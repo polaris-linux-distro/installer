@@ -1,0 +1,7 @@
+NAME="Polaris GNU/Linux"
+PRETTY_NAME="Polaris GNU/Linux"
+ID=polaris
+BUILD_ID=rolling
+ANSI_COLOR="38;5;93"
+HOME_URL="https://polaris-linux.github.io/"
+BUG_REPORT_URL="https://github.com/polaris-linux/polaris/issues"
