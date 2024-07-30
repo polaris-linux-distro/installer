@@ -76,7 +76,6 @@ packages = [
 	'feh',
 	'network-manager-applet',
 	'mousepad',
-	'sddm',
 	'lzop',
 	'xorg',
 	'earlyoom',
@@ -104,7 +103,8 @@ packages = [
 	'xaw3d',
 	'libxp',
 	'gnome-console',
-	'file-roller'
+	'file-roller',
+	'ed'
 ]
 
 amd_drivers = [
@@ -207,7 +207,7 @@ def perform_installation(mountpoint: Path):
 			file.writelines(lines)
 
 		# i love having hacky fixes for my own code.. . .. .... .
-		installation.run_command("pacman -Syyu zsh --noconfirm")
+		installation.run_command("pacman -Syyu zsh sddm --noconfirm")
 		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
