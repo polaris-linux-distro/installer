@@ -8,6 +8,8 @@ from archinstall.lib.models import Bootloader
 import os
 import shutil
 import gpuvendorutil
+import subprocess
+import zipfile
 
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -248,7 +250,17 @@ system-db:local""")
 		lines.append(entry)
 		with open("/mnt/archinstall/etc/sudoers", 'w') as file:
 			file.writelines(lines)
-		
+
+		# Download the zip file
+		url = 'https://gitlab.com/api/v4/projects/37107648/packages/generic/sddm-eucalyptus-drop/2.0.0/sddm-eucalyptus-drop-v2.0.0.zip'
+		subprocess.run(['wget', url])
+
+		# Unzip the file
+		with zipfile.ZipFile('sddm-eucalyptus-drop-v2.0.0.zip', 'r') as zip_ref:
+			zip_ref.extractall('/mnt/archinstall/usr/share/sddm/themes')
+
+		# Remove the zip file
+		os.remove('sddm-eucalyptus-drop-v2.0.0.zip')
 		shutil.copy(f"{SCRIPTDIR}/sddm.conf", "/mnt/archinstall/etc/sddm.conf")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
@@ -263,7 +275,7 @@ system-db:local""")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
 		installation.genfstab()
-		installation.run_command("mkinitcpio -P --osrelease")
+		installation.run_command("mkinitcpio -P")
 
 ask_user_questions()
 
