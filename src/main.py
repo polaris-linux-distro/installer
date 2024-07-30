@@ -203,6 +203,14 @@ def perform_installation(mountpoint: Path):
 			installation.set_mirrors(mirror_config)
 		installation.activate_time_synchronization()
 		installation.setup_swap("zram")
+
+		# this aur is so chaotic omg
+		print("Installing Chaotic AUR")
+		installation.run_command("pacman-key --init")
+		installation.run_command("pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com")
+		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
+		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
+		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
 		
 		with open("/mnt/archinstall/etc/pacman.conf", 'r') as file:
 			lines = file.readlines()
@@ -212,14 +220,6 @@ def perform_installation(mountpoint: Path):
 		lines.append(repo_entry2)
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
-
-		# this aur is so chaotic omg
-		print("Installing Chaotic AUR")
-		installation.run_command("pacman-key --init")
-		installation.run_command("pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com")
-		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
-		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
-		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
 
 		installation.run_command("pacman -Syyu zsh --noconfirm")
 		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd powerpill --noconfirm")
