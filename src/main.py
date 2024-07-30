@@ -1,10 +1,12 @@
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import archinstall
 from archinstall.lib.installer import Installer
 from archinstall.lib import disk
 from archinstall.lib import locale
 from archinstall.lib.models import Bootloader
+from archinstall.lib import menu
 import os
 import shutil
 import gpuvendorutil
@@ -12,6 +14,8 @@ import subprocess
 import zipfile
 
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
+if TYPE_CHECKING:
+	_: Any
 
 packages = [
 	'wget',
@@ -146,6 +150,8 @@ vmware_drivers = [
 	'open-vm-tools'
 ]
 
+type_arg = str()
+
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
 
@@ -164,7 +170,7 @@ def ask_user_questions():
 
 	global_menu.run()
 
-def perform_installation(mountpoint: Path, type):
+def perform_installation(mountpoint: Path):
 	"""
 	Performs the installation steps on a block device.
 	Only requirement is that the block devices are
@@ -200,14 +206,10 @@ def perform_installation(mountpoint: Path, type):
 		
 		with open("/mnt/archinstall/etc/pacman.conf", 'r') as file:
 			lines = file.readlines()
-    
-    	# Prepare the repository entry
 		repo_entry = "\n[polaris]\nServer = https://polaris-linux-distro.github.io/pacman-repo/repo\nSigLevel = Optional TrustAll\n"
-
-		# Append the repository entry to the lines
+		repo_entry2 = "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n"
 		lines.append(repo_entry)
-		
-		# Write the new content back to pacman.conf
+		lines.append(repo_entry2)
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
 
@@ -217,8 +219,9 @@ def perform_installation(mountpoint: Path, type):
 		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
 		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
 		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
+
 		installation.run_command("pacman -Syyu zsh --noconfirm")
-		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
+		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd powerpill --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)
@@ -232,10 +235,6 @@ def perform_installation(mountpoint: Path, type):
 			installation.add_additional_packages(vmware_drivers)
 		
 		installation.add_additional_packages(packages)
-		if type == "budgie":
-			installation.add_additional_packages(budgie_list)
-		elif type == "mate":
-			installation.add_additional_packages(mate_list)
 		shutil.copy(f"{SCRIPTDIR}/useradd", "/mnt/archinstall/etc/default/useradd")
 
 		if timezone := archinstall.arguments.get('timezone', None):
