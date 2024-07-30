@@ -215,6 +215,7 @@ def perform_installation(mountpoint: Path):
 
 		# this aur is so chaotic omg
 		print("Installing Chaotic AUR")
+		installation.run_command("pacman-key --init")
 		installation.run_command("pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com")
 		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
 		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'")
