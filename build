@@ -1,7 +1,9 @@
-mkdir tmp_build
-mkdir tmp_build/archiso_work
-mkdir out       
-mkdir tmp_build/archiso_profile/usr/local/share/polaris-installer
-cp ./archiso_profile ./tmp_build/
-cp src/. tmp_build/archiso_profile/usr/local/share/polaris-installer
+sudo rm -rf tmp_build
+sudo rm -rf out
+mkdir ./tmp_build
+mkdir ./tmp_build/archiso_work
+mkdir ./out       
+cp -r ./archiso_profile ./tmp_build/
+mkdir tmp_build/archiso_profile/airootfs/usr/local/share/polaris-installer/
+cp -r ./src/. tmp_build/archiso_profile/airootfs/usr/local/share/polaris-installer
 sudo mkarchiso -v -w tmp_build/archiso_work -o ./out ./tmp_build/archiso_profile
