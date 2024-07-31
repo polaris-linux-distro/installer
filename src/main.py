@@ -332,6 +332,8 @@ def perform_installation(mountpoint: Path):
 		
 		installation.add_additional_packages(packages)
 		shutil.copy(f"{SCRIPTDIR}/useradd", "/mnt/archinstall/etc/default/useradd")
+		with open("/mnt/archinstall/etc/skel/.zshrc", 'w') as file:
+			file.writelines("# hmm")
 
 		if timezone := archinstall.arguments.get('timezone', None):
 			installation.set_timezone(timezone)
@@ -368,9 +370,6 @@ autoload -Uz compinit
 compinit
 precmd() {print -rP '(%F{blue}%n%f @ %F{blue}%m%f - %F{blue}%~%f)'}
 PROMPT='%F{green}>>%f '""")
-			
-		with open("/mnt/archinstall/etc/skel/.zshrc", 'w') as file:
-			file.writelines("# hmm")
 
 		# Download the zip file
 		url = 'https://gitlab.com/api/v4/projects/37107648/packages/generic/sddm-eucalyptus-drop/2.0.0/sddm-eucalyptus-drop-v2.0.0.zip'
