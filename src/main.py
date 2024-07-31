@@ -89,7 +89,10 @@ Exec = /bin/sh -c "{hook_command}"
 		hook_path = hooks_dir / '99-limine.hook'
 		hook_path.write_text(hook_contents)
 
-		kernel_params = ' quiet splash '.join(self._get_kernel_params(root))
+		kernel_params_orig = self._get_kernel_params(root)
+		kernel_params_orig.append("quiet")
+		kernel_params_orig.append("splash")
+		kernel_params = ' '.join(kernel_params_orig)
 		config_contents = 'TIMEOUT=5\n'
 
 		for kernel in self.kernels:
