@@ -118,6 +118,7 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 		self.helper_flags['bootloader'] = "limine"
 
 packages = [
+	'timeshift',
 	'wget',
 	'nano',
 	'openssh',
@@ -400,6 +401,8 @@ PROMPT='%F{green}>>%f '""")
 		installation.enable_service("touchegg")
 		installation.enable_service("NetworkManager")
 		installation.enable_service("bluetooth")
+		# FUCK OFF CRONIES
+		installation.enable_service("cronie")
 		installation.genfstab()
 		installation.run_command("mkinitcpio -P")
 
