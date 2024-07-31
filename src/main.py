@@ -1,12 +1,13 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
-
+from typing import Any, Optional, TYPE_CHECKING
 import archinstall
 from archinstall.lib.installer import Installer
-from archinstall.lib import disk
+from archinstall.lib import disk, exceptions
+from archinstall.lib.output import log, error, info, warn, debug
 from archinstall.lib import locale
 from archinstall.lib.models import Bootloader
-from archinstall.lib import menu
+from archinstall.lib.hardware import SysInfo
+from archinstall.lib.general import SysCommand
 import os
 import shutil
 import gpuvendorutil
@@ -16,6 +17,97 @@ import zipfile
 SCRIPTDIR = os.path.dirname(os.path.realpath(__file__))
 if TYPE_CHECKING:
 	_: Any
+
+class InstallerHack(Installer):
+	def _add_limine_bootloader(
+		self,
+		boot_partition: disk.PartitionModification,
+		efi_partition: Optional[disk.PartitionModification],
+		root: disk.PartitionModification | disk.LvmVolume
+	):
+		debug('Installing limine bootloader')
+
+		self.pacman.strap('limine')
+
+		info(f"Limine boot partition: {boot_partition.dev_path}")
+
+		limine_path = self.target / 'usr' / 'share' / 'limine'
+		hook_command = None
+
+		if SysInfo.has_uefi():
+			if not efi_partition:
+				raise ValueError('Could not detect efi partition')
+			elif not efi_partition.mountpoint:
+				raise ValueError('EFI partition is not mounted')
+
+			info(f"Limine EFI partition: {efi_partition.dev_path}")
+
+			try:
+				efi_dir_path = self.target / efi_partition.mountpoint.relative_to('/') / 'EFI' / 'BOOT'
+				efi_dir_path.mkdir(parents=True, exist_ok=True)
+
+				for file in ('BOOTIA32.EFI', 'BOOTX64.EFI'):
+					shutil.copy(limine_path / file, efi_dir_path)
+			except Exception as err:
+				raise exceptions.DiskError(f'Failed to install Limine in {self.target}{efi_partition.mountpoint}: {err}')
+
+			hook_command = f'/usr/bin/cp /usr/share/limine/BOOTIA32.EFI {efi_partition.mountpoint}/EFI/BOOT/' \
+				f' && /usr/bin/cp /usr/share/limine/BOOTX64.EFI {efi_partition.mountpoint}/EFI/BOOT/'
+		else:
+			parent_dev_path = disk.device_handler.get_parent_device_path(boot_partition.safe_dev_path)
+
+			if unique_path := disk.device_handler.get_unique_path_for_device(parent_dev_path):
+				parent_dev_path = unique_path
+
+			try:
+				# The `limine-bios.sys` file contains stage 3 code.
+				shutil.copy(limine_path / 'limine-bios.sys', self.target / 'boot')
+
+				# `limine bios-install` deploys the stage 1 and 2 to the disk.
+				SysCommand(f'/usr/bin/arch-chroot {self.target} limine bios-install {parent_dev_path}', peek_output=True)
+			except Exception as err:
+				raise exceptions.DiskError(f'Failed to install Limine on {parent_dev_path}: {err}')
+
+			hook_command = f'/usr/bin/limine bios-install {parent_dev_path}' \
+				f' && /usr/bin/cp /usr/share/limine/limine-bios.sys /boot/'
+
+		hook_contents = f'''[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = limine
+
+[Action]
+Description = Deploying Limine after upgrade...
+When = PostTransaction
+Exec = /bin/sh -c "{hook_command}"
+'''
+
+		hooks_dir = self.target / 'etc' / 'pacman.d' / 'hooks'
+		hooks_dir.mkdir(parents=True, exist_ok=True)
+
+		hook_path = hooks_dir / '99-limine.hook'
+		hook_path.write_text(hook_contents)
+
+		kernel_params = 'quiet splash '.join(self._get_kernel_params(root))
+		config_contents = 'TIMEOUT=5\n'
+
+		for kernel in self.kernels:
+			for variant in ('', '-fallback'):
+				entry = [
+					f'PROTOCOL=linux',
+					f'KERNEL_PATH=boot:///vmlinuz-{kernel}',
+					f'MODULE_PATH=boot:///initramfs-{kernel}{variant}.img',
+					f'CMDLINE={kernel_params}',
+				]
+
+				config_contents += f'\n:Polaris Linux ({variant})\n'
+				config_contents += '\n'.join([f'    {it}' for it in entry]) + '\n'
+
+		config_path = self.target / 'boot' / 'limine.cfg'
+		config_path.write_text(config_contents)
+
+		self.helper_flags['bootloader'] = "limine"
 
 packages = [
 	'wget',
@@ -151,7 +243,6 @@ vmware_drivers = [
 	'open-vm-tools'
 ]
 
-type_arg = str()
 
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
@@ -181,7 +272,7 @@ def perform_installation(mountpoint: Path):
 	disk_encryption: disk.DiskEncryption = archinstall.arguments.get('disk_encryption', None)
 	locale_config: locale.LocaleConfiguration = archinstall.arguments['locale_config']
 
-	with Installer(
+	with InstallerHack(
 		mountpoint,
 		disk_config,
 		disk_encryption=disk_encryption,
@@ -263,6 +354,20 @@ system-db:local""")
 		lines.append(entry)
 		with open("/mnt/archinstall/etc/sudoers", 'w') as file:
 			file.writelines(lines)
+
+		with open("/mnt/archinstall/etc/zsh/zshrc", 'w') as file:
+			file.writelines("""HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+bindkey -e
+zstyle :compinstall filename '$HOME/.zshrc'
+autoload -Uz compinit
+compinit
+precmd() {print -rP '(%F{blue}%n%f @ %F{blue}%m%f - %F{blue}%~%f)'}
+PROMPT='%F{green}>>%f '""")
+			
+		with open("/mnt/archinstall/etc/skel/.zshrc", 'w') as file:
+			file.writelines("# hmm")
 
 		# Download the zip file
 		url = 'https://gitlab.com/api/v4/projects/37107648/packages/generic/sddm-eucalyptus-drop/2.0.0/sddm-eucalyptus-drop-v2.0.0.zip'
