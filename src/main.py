@@ -80,11 +80,16 @@ Target = limine
 [Action]
 Description = Deploying Limine after upgrade...
 When = PostTransaction
-Exec = /bin/sh -c "{hook_command}"
+Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 '''
 
 		hooks_dir = self.target / 'etc' / 'pacman.d' / 'hooks'
 		hooks_dir.mkdir(parents=True, exist_ok=True)
+
+		etc = self.target / 'etc'
+
+		limine_rebuild = etc / 'limine_upgrade_command'
+		limine_rebuild.write_text(hook_command)
 
 		hook_path = hooks_dir / '99-limine.hook'
 		hook_path.write_text(hook_contents)
