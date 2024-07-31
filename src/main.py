@@ -384,6 +384,7 @@ PROMPT='%F{green}>>%f '""")
 		shutil.copy(f"{SCRIPTDIR}/sddm.conf", "/mnt/archinstall/etc/sddm.conf")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
+		shutil.copy(f"{SCRIPTDIR}/lsb-release", "/mnt/archinstall/etc/lsb-release")
 		
 		installation.run_command("chown -R root:root /etc/dconf/db")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
