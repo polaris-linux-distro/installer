@@ -198,7 +198,6 @@ packages = [
 	'tpm2-tools',
 	'plymouth',
 	'libnm',
-	'fastfetch',
 	'wireless-regdb',
 	'galculator',
 	'xaw3d',
@@ -209,7 +208,8 @@ packages = [
 	'qt6-5compat',
 	'qt5-declarative',
 	'sddm',
-	'gspell'
+	'gspell',
+	'glxinfo'
 ]
 
 amd_drivers = [
