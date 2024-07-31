@@ -89,11 +89,11 @@ Exec = /bin/sh -c "{hook_command}"
 		hook_path = hooks_dir / '99-limine.hook'
 		hook_path.write_text(hook_contents)
 
-		kernel_params = 'quiet splash '.join(self._get_kernel_params(root))
+		kernel_params = ' quiet splash '.join(self._get_kernel_params(root))
 		config_contents = 'TIMEOUT=5\n'
 
 		for kernel in self.kernels:
-			for variant in ('', '-fallback'):
+			for variant in ('', 'fallback'):
 				entry = [
 					f'PROTOCOL=linux',
 					f'KERNEL_PATH=boot:///vmlinuz-{kernel}',
@@ -101,7 +101,7 @@ Exec = /bin/sh -c "{hook_command}"
 					f'CMDLINE={kernel_params}',
 				]
 
-				config_contents += f'\n:Polaris Linux ({variant})\n'
+				config_contents += f'\n:Polaris Linux {variant}\n'
 				config_contents += '\n'.join([f'    {it}' for it in entry]) + '\n'
 
 		config_path = self.target / 'boot' / 'limine.cfg'
