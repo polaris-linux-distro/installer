@@ -385,7 +385,7 @@ PROMPT='%F{green}>>%f '""")
 		with zipfile.ZipFile('sddm-eucalyptus-drop-v2.0.0.zip', 'r') as zip_ref:
 			zip_ref.extractall('/mnt/archinstall/usr/share/sddm/themes')
 		os.remove('sddm-eucalyptus-drop-v2.0.0.zip')
-		# Wood fired pizza, now how will pizza get a job now?
+		# Wood fired pizza, hows pizza get a job now?
 		os.mkdir("/mnt/archinstall/usr/share/gnome-background-properties")
 		shutil.copy(f"{SCRIPTDIR}/sddm.conf", "/mnt/archinstall/etc/sddm.conf")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
@@ -400,7 +400,7 @@ PROMPT='%F{green}>>%f '""")
 			if os.path.isfile(source_item):
 				shutil.copy(source_item, destination_item)
 		
-		os.rmdir("/mnt/archinstall/usr/share/backgrounds/budgie")
+		installation.run_command("rm -rf /usr/share/backgrounds/budgie")
 		os.remove("/mnt/archinstall/usr/share/gnome-background-properties/budgie-backgrounds.xml")
 
 		
