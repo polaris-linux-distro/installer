@@ -380,17 +380,13 @@ autoload -Uz compinit
 compinit
 precmd() {print -rP '(%F{blue}%n%f @ %F{blue}%m%f - %F{blue}%~%f)'}
 PROMPT='%F{green}>>%f '""")
-
-		# Download the zip file
 		url = 'https://gitlab.com/api/v4/projects/37107648/packages/generic/sddm-eucalyptus-drop/2.0.0/sddm-eucalyptus-drop-v2.0.0.zip'
 		subprocess.run(['wget', url])
-
-		# Unzip the file
 		with zipfile.ZipFile('sddm-eucalyptus-drop-v2.0.0.zip', 'r') as zip_ref:
 			zip_ref.extractall('/mnt/archinstall/usr/share/sddm/themes')
-
-		# Remove the zip file
 		os.remove('sddm-eucalyptus-drop-v2.0.0.zip')
+		# Wood fired pizza, now how will pizza get a job now?
+		os.mkdir("/mnt/archinstall/usr/share/gnome-background-properties")
 		shutil.copy(f"{SCRIPTDIR}/sddm.conf", "/mnt/archinstall/etc/sddm.conf")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
@@ -402,7 +398,7 @@ PROMPT='%F{green}>>%f '""")
 			source_item = os.path.join(f"{SCRIPTDIR}/backgrounds", item)
 			destination_item = os.path.join("/mnt/archinstall/usr/share/backgrounds/polaris", item)
 			if os.path.isfile(source_item):
-				shutil.copy2(source_item, destination_item)
+				shutil.copy(source_item, destination_item)
 		
 		os.rmdir("/mnt/archinstall/usr/share/backgrounds/budgie")
 		os.remove("/mnt/archinstall/usr/share/gnome-background-properties/budgie-backgrounds.xml")
