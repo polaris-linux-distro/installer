@@ -1,9 +1,16 @@
 To install Polaris Linux:
 
-For Wi-Fi, authenticate to the wireless network using the [35miwctl[0m utility.
-For mobile broadband (WWAN) modems, connect with the [35mmmcli[0m utility.
+To connect to Wi-Fi, authenticate to the wireless network using the [35miwctl[0m utility. (ArchWiki page)
+For mobile broadband (WWAN) modems, connect with the [35mmmcli[0m utility. (ArchWiki page)
 Ethernet, WLAN and WWAN interfaces using DHCP should work automatically.
 
 From there, you can navigate the text based installer in [35minstall-polaris[0m
 
-[41m [41m [41m [40m [44m [40m [41m [46m [45m [41m [46m [43m [41m [44m [45m [40m [44m [40m [41m [44m [41m [41m [46m [42m [41m [44m [43m [41m [45m [40m [40m [44m [40m [41m [44m [42m [41m [46m [44m [41m [46m [47m [0m
+If you want to recover data, you should check out
+[35mtestdisk[0m and [35mphotorec[0m
+
+For partitioning, check out
+[35mcfdisk[0m, [35mfdisk[0m and [35mparted[0m
+
+All of these commands are currently on the system.
+Happy hacking!
