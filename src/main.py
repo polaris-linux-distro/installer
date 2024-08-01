@@ -401,8 +401,6 @@ PROMPT='%F{green}>>%f '""")
 				shutil.copy(source_item, destination_item)
 		
 		installation.run_command("rm -rf /usr/share/backgrounds/budgie")
-		os.remove("/mnt/archinstall/usr/share/gnome-background-properties/budgie-backgrounds.xml")
-
 		
 		installation.run_command("chown -R root:root /etc/dconf/db")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
