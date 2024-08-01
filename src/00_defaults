@@ -133,3 +133,6 @@ num-workspaces=4
 
 [org/gnome/settings-daemon/plugins/xsettings]
 overrides={'Gtk/ShellShowsAppMenu': <0>, 'Gtk/DecorationLayout': <'menu:minimize,maximize,close'>}
+
+[org/gnome/desktop/background]
+picture-uri="file:///usr/share/backgrounds/polaris/planter.jpg"

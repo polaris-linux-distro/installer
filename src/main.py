@@ -219,7 +219,8 @@ packages = [
 	'qt5-declarative',
 	'sddm',
 	'gspell',
-	'glxinfo'
+	'glxinfo',
+	'libreoffice-fresh'
 ]
 
 amd_drivers = [
@@ -255,7 +256,6 @@ vmware_drivers = [
 	'mesa',
 	'open-vm-tools'
 ]
-
 
 def ask_user_questions():
 	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
@@ -395,6 +395,18 @@ PROMPT='%F{green}>>%f '""")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
 		shutil.copy(f"{SCRIPTDIR}/lsb-release", "/mnt/archinstall/etc/lsb-release")
+		shutil.copy(f"{SCRIPTDIR}/polaris-backgrounds.xml", "/mnt/archinstall/usr/share/gnome-background-properties/polaris-backgrounds.xml")
+
+		os.mkdir("/mnt/archinstall/usr/share/backgrounds/polaris")
+		for item in os.listdir(f"{SCRIPTDIR}/backgrounds"):
+			source_item = os.path.join(f"{SCRIPTDIR}/backgrounds", item)
+			destination_item = os.path.join("/mnt/archinstall/usr/share/backgrounds/polaris", item)
+			if os.path.isfile(source_item):
+				shutil.copy2(source_item, destination_item)
+		
+		os.rmdir("/mnt/archinstall/usr/share/backgrounds/budgie")
+		os.remove("/mnt/archinstall/usr/share/gnome-background-properties/budgie-backgrounds.xml")
+
 		
 		installation.run_command("chown -R root:root /etc/dconf/db")
 		installation.run_command("chmod -R 755 /etc/dconf/db")
