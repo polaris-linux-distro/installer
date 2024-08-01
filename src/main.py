@@ -413,6 +413,8 @@ PROMPT='%F{green}>>%f '""")
 		installation.enable_service("bluetooth")
 		# FUCK OFF CRONIES
 		installation.enable_service("cronie")
+		installation.enable_service("firewalld")
+		installation.enable_service("dhcpcd")
 		installation.genfstab()
 		installation.run_command("mkinitcpio -P")
 
