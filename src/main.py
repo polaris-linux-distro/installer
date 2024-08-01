@@ -220,7 +220,8 @@ packages = [
 	'sddm',
 	'gspell',
 	'glxinfo',
-	'libreoffice-fresh'
+	'libreoffice-fresh',
+	'terminus-fonts'
 ]
 
 amd_drivers = [
@@ -380,6 +381,14 @@ autoload -Uz compinit
 compinit
 precmd() {print -rP '(%F{blue}%n%f @ %F{blue}%m%f - %F{blue}%~%f)'}
 PROMPT='%F{green}>>%f '""")
+			
+		with open("/mnt/archinstall/etc/vconsole.conf", 'r') as file:
+			lines = file.readlines()
+		entry = "\nFONT=ter-v16b"
+		lines.append(entry)
+		with open("/mnt/archinstall/etc/vconsole.conf", 'w') as file:
+			file.writelines(lines)
+
 		url = 'https://gitlab.com/api/v4/projects/37107648/packages/generic/sddm-eucalyptus-drop/2.0.0/sddm-eucalyptus-drop-v2.0.0.zip'
 		subprocess.run(['wget', url])
 		with zipfile.ZipFile('sddm-eucalyptus-drop-v2.0.0.zip', 'r') as zip_ref:
@@ -413,8 +422,10 @@ PROMPT='%F{green}>>%f '""")
 		installation.enable_service("bluetooth")
 		# FUCK OFF CRONIES
 		installation.enable_service("cronie")
+		# END FUCK OFF CRONIES
 		installation.enable_service("firewalld")
 		installation.enable_service("dhcpcd")
+		installation.enable_service("systemd-vconsole-setup")
 		installation.genfstab()
 		installation.run_command("mkinitcpio -P")
 
