@@ -221,7 +221,7 @@ packages = [
 	'gspell',
 	'glxinfo',
 	'libreoffice-fresh',
-	'terminus-fonts'
+	'terminus-font'
 ]
 
 amd_drivers = [
@@ -384,7 +384,7 @@ PROMPT='%F{green}>>%f '""")
 			
 		with open("/mnt/archinstall/etc/vconsole.conf", 'r') as file:
 			lines = file.readlines()
-		entry = "\nFONT=ter-v16b"
+		entry = "\nFONT=ter-v18b"
 		lines.append(entry)
 		with open("/mnt/archinstall/etc/vconsole.conf", 'w') as file:
 			file.writelines(lines)
