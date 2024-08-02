@@ -106,6 +106,12 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 			f'MODULE_PATH=boot:///initramfs-linux-zen.img',
 			f'CMDLINE={kernel_params} quiet splash',
 		]
+		entry_verbose = [
+			f'PROTOCOL=linux',
+			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
+			f'MODULE_PATH=boot:///initramfs-linux-zen-fallback.img',
+			f'CMDLINE={kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug systemd.log_target=console',
+		]
 		entry_rescue = [
 			f'PROTOCOL=linux',
 			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
@@ -115,6 +121,8 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 
 		config_contents += f'\n:Polaris Linux\n'
 		config_contents += '\n'.join([f'    {it}' for it in entry_normal]) + '\n'
+		config_contents += f'\n:Polaris Linux (Verbose mode)\n'
+		config_contents += '\n'.join([f'    {it}' for it in entry_verbose]) + '\n'
 		config_contents += f'\n:Polaris Linux (Emergency mode)\n'
 		config_contents += '\n'.join([f'    {it}' for it in entry_rescue]) + '\n'
 
