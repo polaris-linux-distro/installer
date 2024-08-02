@@ -117,7 +117,7 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 			f'PROTOCOL=linux',
 			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
 			f'MODULE_PATH=boot:///initramfs-linux-zen-fallback.img',
-			f'CMDLINE={kernel_params} systemd.unit=emergency.target loglevel=7 debug nomodeset earlyprintk=vga plymouth.enable=0 systemd.log_level=debug systemd.log_target=console',
+			f'CMDLINE={kernel_params} systemd.unit=emergency.target loglevel=7 debug nomodeset earlyprintk=vga single plymouth.enable=0 systemd.log_level=debug systemd.log_target=console',
 		]
 
 		config_contents += f'\n:Polaris Linux\n'
