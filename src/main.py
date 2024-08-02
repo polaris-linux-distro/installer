@@ -137,9 +137,9 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 		config_contents += f'\n:Polaris Linux (Verbose mode)\n'
 		config_contents += '\n'.join([f'    {it}' for it in entry_verbose]) + '\n'
 		config_contents += f'\n:Polaris Linux (fallback initramfs)\n'
-		config_contents += '\n'.join([f'    {it}' for it in entry_normal]) + '\n'
+		config_contents += '\n'.join([f'    {it}' for it in entry_normal_fallback]) + '\n'
 		config_contents += f'\n:Polaris Linux (Verbose mode,fallback initramfs)\n'
-		config_contents += '\n'.join([f'    {it}' for it in entry_verbose]) + '\n'
+		config_contents += '\n'.join([f'    {it}' for it in entry_verbose_fallback]) + '\n'
 		config_contents += f'\n:Polaris Linux (Emergency mode)\n'
 		config_contents += '\n'.join([f'    {it}' for it in entry_rescue]) + '\n'
 
