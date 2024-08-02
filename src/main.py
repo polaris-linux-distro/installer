@@ -107,7 +107,7 @@ graphics: yes
 wallpaper: /boot/wallpapers/my_wallpaper.png
 wallpaper_style: centered
 interface_branding: Polaris Linux
-interface_branding_colour: 1
+interface_branding_colour: 5
 editor_enabled: yes
 """
 		entry_normal = [
