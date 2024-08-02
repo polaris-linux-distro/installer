@@ -94,23 +94,25 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 		hook_path = hooks_dir / '99-limine.hook'
 		hook_path.write_text(hook_contents)
 
-		kernel_params_orig = self._get_kernel_params(root)
-		kernel_params_orig.append("quiet")
-		kernel_params_orig.append("splash")
-		kernel_params = ' '.join(kernel_params_orig)
+		kernel_params = ' '.join(self._get_kernel_params(root))
 		config_contents = 'TIMEOUT=5\n'
+		entry_normal = [
+			f'PROTOCOL=linux',
+			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
+			f'MODULE_PATH=boot:///initramfs-linux-zen.img',
+			f'CMDLINE={kernel_params} quiet splash',
+		]
+		entry_rescue = [
+			f'PROTOCOL=linux',
+			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
+			f'MODULE_PATH=boot:///initramfs-linux-zen-fallback.img',
+			f'CMDLINE={kernel_params} systemd.unit=emergency.target loglevel=7 debug nomodeset earlyprintk=vga plymouth.enable=0 systemd.log_level=debug systemd.log_target=console',
+		]
 
-		for kernel in self.kernels:
-			for variant in ('', 'fallback'):
-				entry = [
-					f'PROTOCOL=linux',
-					f'KERNEL_PATH=boot:///vmlinuz-{kernel}',
-					f'MODULE_PATH=boot:///initramfs-{kernel}{variant}.img',
-					f'CMDLINE={kernel_params}',
-				]
-
-				config_contents += f'\n:Polaris Linux {variant}\n'
-				config_contents += '\n'.join([f'    {it}' for it in entry]) + '\n'
+		config_contents += f'\n:Polaris Linux\n'
+		config_contents += '\n'.join([f'    {it}' for it in entry_normal]) + '\n'
+		config_contents += f'\n:Polaris Linux (Emergency mode)\n'
+		config_contents += '\n'.join([f'    {it}' for it in entry_rescue]) + '\n'
 
 		config_path = self.target / 'boot' / 'limine.cfg'
 		config_path.write_text(config_contents)
