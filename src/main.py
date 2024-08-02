@@ -267,7 +267,6 @@ packages = [
 	'sddm',
 	'gspell',
 	'glxinfo',
-	'libreoffice-fresh',
 	'terminus-font'
 ]
 
