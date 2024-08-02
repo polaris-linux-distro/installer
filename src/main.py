@@ -100,38 +100,7 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 		hook_path.write_text(hook_contents)
 
 		kernel_params = ' '.join(self._get_kernel_params(root))
-		config_contents = 'TIMEOUT=5\n'
-		entry_normal = [
-			f'protocol: linux',
-			f'kernel_path: /boot/vmlinuz-linux-zen',
-			f'module_path: /boot/initramfs-linux-zen.img',
-			f'cmdline: {kernel_params} quiet splash',
-		]
-		entry_verbose = [
-			'protocol: linux',
-			'kernel_path: boot:///vmlinuz-linux-zen',
-			'module_path: boot:///initramfs-linux-zen.img',
-			f'cmdline: {kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug',
-		]
-		entry_normal_fallback = [
-			f'protocol: linux',
-			f'kernel_path: boot:///vmlinuz-linux-zen',
-			f'module_path: boot:///initramfs-linux-zen-fallback.img',
-			f'cmdline: {kernel_params} quiet splash',
-		]
-		entry_verbose_fallback = [
-			f'protocol: linux',
-			f'kernel_path: boot:///vmlinuz-linux-zen',
-			f'module_path: boot:///initramfs-linux-zen-fallback.img',
-			f'cmdline: {kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug',
-		]
-		entry_rescue = [
-			f'protocol: linux',
-			f'kernel_path: boot:///vmlinuz-linux-zen',
-			f'module_path: boot:///initramfs-linux-zen-fallback.img',
-			f'cmdline: {kernel_params} systemd.unit=emergency.target loglevel=7 debug systemd.log_level=debu nomodeset systemd.mask=multi-user.target systemd.mask=graphical.target plymouth.enable=0',
-		]
-		config_contents += """timeout: 5
+		config_contents = """timeout: 30
 default_entry: 1
 quiet: no
 graphics: yes
@@ -141,6 +110,36 @@ interface_branding: Polaris Linux
 interface_branding_colour: 1
 editor_enabled: yes
 """
+		entry_normal = [
+			f'protocol: linux',
+			f'kernel_path: boot():/vmlinuz-linux-zen',
+			f'module_path: boot():/initramfs-linux-zen.img',
+			f'cmdline: {kernel_params} quiet splash',
+		]
+		entry_verbose = [
+			'protocol: linux',
+			'kernel_path: boot():/vmlinuz-linux-zen',
+			'module_path: boot():/initramfs-linux-zen.img',
+			f'cmdline: {kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug',
+		]
+		entry_normal_fallback = [
+			f'protocol: linux',
+			f'kernel_path: boot():/vmlinuz-linux-zen',
+			f'module_path: boot():/initramfs-linux-zen-fallback.img',
+			f'cmdline: {kernel_params} quiet splash',
+		]
+		entry_verbose_fallback = [
+			f'protocol: linux',
+			f'kernel_path: boot():/vmlinuz-linux-zen',
+			f'module_path: boot():/initramfs-linux-zen-fallback.img',
+			f'cmdline: {kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug',
+		]
+		entry_rescue = [
+			f'protocol: linux',
+			f'kernel_path: boot():/vmlinuz-linux-zen',
+			f'module_path: boot():/initramfs-linux-zen-fallback.img',
+			f'cmdline: {kernel_params} systemd.unit=emergency.target loglevel=7 debug systemd.log_level=debu nomodeset systemd.mask=multi-user.target systemd.mask=graphical.target plymouth.enable=0',
+		]
 		config_contents += f'\n/Polaris Linux\n'
 		config_contents += '\n'.join([f'    {it}' for it in entry_normal]) + '\n'
 		config_contents += f'\n/Polaris Linux (Verbose mode)\n'
