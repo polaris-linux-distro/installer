@@ -12,6 +12,7 @@ from archinstall.lib.general import SysCommand
 from archinstall.lib.menu import (
 	Selector
 )
+from archinstall.lib.interactions import select_disk_config
 import os
 import shutil
 import gpuvendorutil
@@ -109,7 +110,7 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 		entry_verbose = [
 			f'PROTOCOL=linux',
 			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
-			f'MODULE_PATH=boot:///initramfs-linux-zen-fallback.img',
+			f'MODULE_PATH=boot:///initramfs-linux-zen.img',
 			f'CMDLINE={kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug systemd.log_target=console',
 		]
 		entry_rescue = [
@@ -142,6 +143,13 @@ class DiskMenuHack(disk_menu.DiskLayoutConfigurationMenu):
 				default=self._disk_layout_config,
 				enabled=True
 			)
+	def _select_disk_layout_config(
+		self,
+		preset: Optional[disk_menu.DiskLayoutConfiguration]
+	) -> Optional[disk_menu.DiskLayoutConfiguration]:
+		disk_config = select_disk_config(preset, advanced_option=self._advanced)
+
+		return disk_config
 
 class GlobalMenuHack(archinstall.GlobalMenu):
 	def _select_disk_config(
