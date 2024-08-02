@@ -111,7 +111,7 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 			f'PROTOCOL=linux',
 			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
 			f'MODULE_PATH=boot:///initramfs-linux-zen.img',
-			f'CMDLINE={kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug systemd.log_target=console',
+			f'CMDLINE={kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug',
 		]
 		entry_normal_fallback = [
 			f'PROTOCOL=linux',
@@ -123,13 +123,13 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 			f'PROTOCOL=linux',
 			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
 			f'MODULE_PATH=boot:///initramfs-linux-zen-fallback.img',
-			f'CMDLINE={kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug systemd.log_target=console',
+			f'CMDLINE={kernel_params} loglevel=7 debug earlyprintk=vga plymouth.enable=0 systemd.log_level=debug',
 		]
 		entry_rescue = [
 			f'PROTOCOL=linux',
 			f'KERNEL_PATH=boot:///vmlinuz-linux-zen',
 			f'MODULE_PATH=boot:///initramfs-linux-zen-fallback.img',
-			f'CMDLINE={kernel_params} systemd.unit=emergency.target loglevel=7 debug nomodeset systemd.mask=multi-user.target systemd.mask=graphical.target init=/bin/bash plymouth.enable=0',
+			f'CMDLINE={kernel_params} systemd.unit=emergency.target loglevel=7 debug systemd.log_level=debu nomodeset systemd.mask=multi-user.target systemd.mask=graphical.target plymouth.enable=0',
 		]
 
 		config_contents += f'\n:Polaris Linux\n'
@@ -423,6 +423,9 @@ def perform_installation(mountpoint: Path):
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
 		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d/00_defaults")
+		with open("/mnt/archinstall/etc/dconf/profile/user", "w+") as f:
+			f.write("""user-db:user
+system-db:local""")
 
 		with open("/mnt/archinstall/etc/sudoers", 'r') as file:
 			lines = file.readlines()
