@@ -107,20 +107,6 @@ module='org.buddiesofbudgie.budgie-desktop.raven.widget.MediaControls.so'
 [org/buddiesofbudgie/budgie-desktop/raven/widgets/instance-info/e69e033a-a143-4dc0-8f72-c32dca6cb454]
 module='org.buddiesofbudgie.budgie-desktop.raven.widget.SoundOutput.so'
 
-[org/buddiesofbudgie/control-center]
-last-panel='default-apps'
-window-state=(980, 640, false)
-
-[org/gnome/Ptyxis]
-default-profile-uuid='20a084a169095591b068dd18669c113f'
-profile-uuids=['20a084a169095591b068dd18669c113f']
-window-size=(uint32 80, uint32 24)
-
-[org/gnome/desktop/input-sources]
-current=uint32 0
-sources=[('xkb', 'us')]
-xkb-options=['terminate:ctrl_alt_bksp']
-
 [org/gnome/desktop/interface]
 color-scheme='prefer-dark'
 cursor-theme='Adwaita'

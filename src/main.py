@@ -423,10 +423,7 @@ def perform_installation(mountpoint: Path):
 		# i feel like such an idiot knowing this needed only one function to fix it. ughhhhh
 		os.mkdir("/mnt/archinstall/etc/dconf/db/local.d")
 		shutil.copy(f"{SCRIPTDIR}/00_defaults", "/mnt/archinstall/etc/dconf/db/local.d/00_defaults")
-		with open("/mnt/archinstall/etc/dconf/profile/user", "w+") as f:
-			f.write("""user-db:user
-system-db:local""")
-			
+
 		with open("/mnt/archinstall/etc/sudoers", 'r') as file:
 			lines = file.readlines()
 		entry = "\n%wheel ALL=(ALL:ALL) ALL"
