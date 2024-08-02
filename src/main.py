@@ -290,7 +290,7 @@ vmware_drivers = [
 ]
 
 def ask_user_questions():
-	global_menu = archinstall.GlobalMenu(data_store=archinstall.arguments)
+	global_menu = GlobalMenuHack(data_store=archinstall.arguments)
 
 	global_menu.enable('archinstall-language', mandatory=True)
 	global_menu.enable('timezone', mandatory=True)
