@@ -1,13 +1,17 @@
 from pathlib import Path
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, Optional, TYPE_CHECKING, Dict
 import archinstall
 from archinstall.lib.installer import Installer
 from archinstall.lib import disk, exceptions
+from archinstall.lib.disk import disk_menu
 from archinstall.lib.output import log, error, info, warn, debug
 from archinstall.lib import locale
 from archinstall.lib.models import Bootloader
 from archinstall.lib.hardware import SysInfo
 from archinstall.lib.general import SysCommand
+from archinstall.lib.menu import (
+	Selector
+)
 import os
 import shutil
 import gpuvendorutil
@@ -118,6 +122,31 @@ Exec = /usr/bin/python /usr/share/polaris/polo-adm.py rebuild-boot
 		config_path.write_text(config_contents)
 
 		self.helper_flags['bootloader'] = "limine"
+
+class DiskMenuHack(disk_menu.DiskLayoutConfigurationMenu):
+	def setup_selection_menu_options(self):
+		self._menu_options['disk_config'] = \
+			Selector(
+				_('Partitioning'),
+				lambda x: self._select_disk_layout_config(x),
+				display_func=lambda x: self._display_disk_layout(x),
+				preview_func=self._prev_disk_layouts,
+				default=self._disk_layout_config,
+				enabled=True
+			)
+
+class GlobalMenuHack(archinstall.GlobalMenu):
+	def _select_disk_config(
+		self,
+		preset: Optional[disk.DiskLayoutConfiguration] = None
+	) -> Optional[disk.DiskLayoutConfiguration]:
+		data_store: Dict[str, Any] = {}
+		disk_config = DiskMenuHack(preset, data_store).run()
+
+		if disk_config != preset:
+			self._menu_options['disk_encryption'].set_current_selection(None)
+
+		return disk_config
 
 packages = [
 	'timeshift',
