@@ -181,6 +181,7 @@ class GlobalMenuHack(archinstall.GlobalMenu):
 		return disk_config
 
 packages = [
+	'libreoffice-fresh',
 	'timeshift',
 	'wget',
 	'nano',
@@ -461,7 +462,6 @@ PROMPT='%F{green}>>%f '""")
 		shutil.copy(f"{SCRIPTDIR}/sddm.conf", "/mnt/archinstall/etc/sddm.conf")
 		shutil.copy(f"{SCRIPTDIR}/mkinitcpio.conf", "/mnt/archinstall/etc/mkinitcpio.conf")
 		shutil.copy(f"{SCRIPTDIR}/os-release", "/mnt/archinstall/etc/os-release")
-		shutil.copy(f"{SCRIPTDIR}/lsb-release", "/mnt/archinstall/etc/lsb-release")
 		shutil.copy(f"{SCRIPTDIR}/polaris-backgrounds.xml", "/mnt/archinstall/usr/share/gnome-background-properties/polaris-backgrounds.xml")
 
 		os.mkdir("/mnt/archinstall/usr/share/backgrounds/polaris")
