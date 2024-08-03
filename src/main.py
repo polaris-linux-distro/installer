@@ -292,7 +292,9 @@ packages = [
 	'sddm',
 	'gspell',
 	'glxinfo',
-	'terminus-font'
+	'terminus-font',
+	'seahorse',
+	'gnome-keyring'
 ]
 
 amd_drivers = [
@@ -397,6 +399,12 @@ def perform_installation(mountpoint: Path):
 		lines.append(repo_entry2)
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
+		os.mkdir("/mnt/archinstall/etc/skel/Documents")
+		os.mkdir("/mnt/archinstall/etc/skel/Videos")
+		os.mkdir("/mnt/archinstall/etc/skel/Pictures")
+		os.mkdir("/mnt/archinstall/etc/skel/Downloads")
+		os.mkdir("/mnt/archinstall/etc/skel/.polo")
+		os.mkdir("/mnt/archinstall/etc/skel/.polo/pkgs")
 
 		installation.run_command("pacman -Syyu zsh --noconfirm")
 		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
