@@ -298,7 +298,7 @@ packages = [
 amd_drivers = [
     'vulkan-radeon',
 	'xf86-video-ati',
-	'mesa'
+	'mesa',
 	'libva-mesa-driver',
 	'xf86-video-amdgpu'
 ]
