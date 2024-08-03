@@ -415,7 +415,7 @@ def perform_installation(mountpoint: Path):
 		installation.add_additional_packages(packages)
 		shutil.copy(f"{SCRIPTDIR}/useradd", "/mnt/archinstall/etc/default/useradd")
 		with open("/mnt/archinstall/etc/skel/.zshrc", 'w') as file:
-			file.writelines("# hmm")
+			file.writelines("# Placeholder so we don't get yelled at by ZSH to setup")
 
 		if timezone := archinstall.arguments.get('timezone', None):
 			installation.set_timezone(timezone)
