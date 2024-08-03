@@ -10,7 +10,7 @@ If you want to recover data, you should check out
 [35mtestdisk[0m and [35mphotorec[0m
 
 For partitioning, check out
-[35mcfdisk[0m, [35mfdisk[0m and [35mparted[0m
+[35mcfdisk[0m, [35mfdisk[0m and [35mparted[0m (not needed for installer)
 
 All of these commands are currently on the system.
 Happy hacking!
