@@ -403,6 +403,10 @@ def perform_installation(mountpoint: Path):
 		os.mkdir("/mnt/archinstall/etc/skel/Videos")
 		os.mkdir("/mnt/archinstall/etc/skel/Pictures")
 		os.mkdir("/mnt/archinstall/etc/skel/Downloads")
+		os.mkdir("/mnt/archinstall/etc/skel/Music")
+		os.mkdir("/mnt/archinstall/etc/skel/Desktop")
+		os.mkdir("/mnt/archinstall/etc/skel/Templates")
+		os.mkdir("/mnt/archinstall/etc/skel/Public")
 		os.mkdir("/mnt/archinstall/etc/skel/.polo")
 		os.mkdir("/mnt/archinstall/etc/skel/.polo/pkgs")
 
