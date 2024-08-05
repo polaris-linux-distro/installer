@@ -384,20 +384,15 @@ def perform_installation(mountpoint: Path):
 		installation.activate_time_synchronization()
 		installation.setup_swap("zram")
 
-		# this aur is so chaotic omg
-		print("Installing Chaotic AUR")
-		installation.run_command("pacman-key --init")
-		installation.run_command("pacman-key --recv-key 3056513887B78AEB")
-		installation.run_command("pacman-key --lsign-key 3056513887B78AEB")
-		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm")
-		installation.run_command("pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm")
+		os.mkdir("/mnt/archinstall/etc/polaris/packages")
+		subprocess.run(["cp", "/etc/polaris-installer-aur", "/mnt/archinstall/etc/polaris/packages"])
+		subprocess.run(["sudo", "-u", "bitchycirclejerk", "bash", "/etc/installer-mkaur"])
+		installation.run_command("cd /etc/polaris/packages && pacman -U $(ls -f /etc/polaris/packages)")
 		
 		with open("/mnt/archinstall/etc/pacman.conf", 'r') as file:
 			lines = file.readlines()
 		repo_entry = "\n[polaris]\nServer = https://polaris-linux-distro.github.io/pacman-repo/repo\nSigLevel = Optional TrustAll\n"
-		repo_entry2 = "\n[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist\n"
 		lines.append(repo_entry)
-		lines.append(repo_entry2)
 		with open("/mnt/archinstall/etc/pacman.conf", 'w') as file:
 			file.writelines(lines)
 		os.mkdir("/mnt/archinstall/etc/skel/Documents")
@@ -411,8 +406,6 @@ def perform_installation(mountpoint: Path):
 		os.mkdir("/mnt/archinstall/etc/skel/.polo")
 		os.mkdir("/mnt/archinstall/etc/skel/.polo/pkgs")
 
-		installation.run_command("pacman -Syyu zsh --noconfirm")
-		installation.run_command("pacman -Sy polo aic94xx-firmware ast-firmware wd719x-firmware upd72020x-fw xvkbd --noconfirm")
 		gpu_vendor = gpuvendorutil.get_gpu_vendor()
 		if gpu_vendor == "amd":
 			installation.add_additional_packages(amd_drivers)

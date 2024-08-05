@@ -1,0 +1,24 @@
+git clone https://aur.archlinux.org/aic94xx-firmware.git 
+git clone https://aur.archlinux.org/ast-firmware.git 
+git clone https://aur.archlinux.org/wd719x-firmware.git
+git clone https://aur.archlinux.org/upd72020x-fw.git
+git clone https://aur.archlinux.org/xvkbd.git
+mkdir packages
+
+cd aic94xx-firmware
+makepkg 
+cd ../ast-firmware
+makepkg
+cd ../wd719x-firmware
+makepkg
+cd ../upd72020x-fw
+makepkg
+cd ../xvkbd
+makepkg
+cd ..
+
+cd ./aic94xx-firmware/*.pkg.tar.zst packages
+cd ./ast-firmware/*.pkg.tar.zst packages
+cd ./wd719x-firmware/*.pkg.tar.zst packages
+cd ./upd72020x-fw/*.pkg.tar.zst packages
+cd ./xvkbd/*.pkg.tar.zst packages
