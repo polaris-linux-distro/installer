@@ -385,6 +385,7 @@ def perform_installation(mountpoint: Path):
 		installation.setup_swap("zram")
 
 		os.mkdir("/mnt/archinstall/etc/polaris/packages")
+		os.mkdir("/mnt/archinstall/etc/polaris")
 		subprocess.run(["cp", "/etc/polaris-installer-aur", "/mnt/archinstall/etc/polaris/packages"])
 		subprocess.run(["sudo", "-u", "bitchycirclejerk", "bash", "/etc/installer-mkaur"])
 		installation.run_command("cd /etc/polaris/packages && pacman -U $(ls -f /etc/polaris/packages)")
