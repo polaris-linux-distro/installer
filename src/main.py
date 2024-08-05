@@ -213,6 +213,7 @@ packages = [
 	'mimalloc',
 	'nasm',
 	'xdg-utils',
+	'xdg-user-dirs',
 	'htop',
 	'pipewire',
 	'pipewire-alsa',
